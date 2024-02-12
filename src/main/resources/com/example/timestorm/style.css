@@ -1,8 +1,8 @@
-/* CSS HEX */
+/* CSS HEX FOR LIGHT THEME */
 .alabaster {
     color: #E6E4D8ff;
 }
- 
+
 .sage {
     color: #ADA67Dff;
 }
@@ -17,4 +17,25 @@
 
 .dark-moss-green {
     color: #67652Aff;
+}
+
+/* CSS HEX FOR DARK THEME */
+.charcoal {
+    color: #3C5766ff;
+}
+
+.gunmetal {
+    color: #1D3340ff;
+}
+
+.paynes-gray {
+    color: #43687Fff;
+}
+
+.air-force-blue {
+    color: #598195ff;
+}
+
+.prussian-blue {
+    color: #0C2538ff;
 }
