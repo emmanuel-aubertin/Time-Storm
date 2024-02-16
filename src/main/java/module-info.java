@@ -4,8 +4,6 @@ module com.example.timestorm {
 
     requires org.controlsfx.controls;
     requires jsoup;
-    requires org.seleniumhq.selenium.chrome_driver;
-
     opens com.example.timestorm to javafx.fxml;
     exports com.example.timestorm;
 }

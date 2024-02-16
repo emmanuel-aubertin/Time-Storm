@@ -7,20 +7,16 @@ import org.jsoup.select.Elements;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.io.DataOutputStream;
 
 public class LoginProvider {
-    private String tokenExecution;
+    private String token;
+    private String name;
     private boolean isTeacher;
 
     public LoginProvider() throws IOException {
-        if(! setTokenExecution()){
-            System.out.println("Unable to login!");
-        }
         isTeacher = false;
     }
 
@@ -55,70 +51,44 @@ public class LoginProvider {
         return response.toString();
     }
 
-    /**
-     * Set a new execution token
-     * @return true if a new one has been set
-     * @throws IOException
-     */
-    private boolean setTokenExecution() throws IOException {
-        URL obj = new URL("https://cas.univ-avignon.fr/cas/login?service=https%3A%2F%2Fedt.univ-avignon.fr%2Flogin");
-
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", "Java client");
-
-        int responseCode = con.getResponseCode();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            tokenExecution = extractExecutionValue(con);
-            con.disconnect();
-            return true;
-        }
-        return false;
-    }
-
     public boolean tryLogin(String username, String password) throws IOException {
         if (!username.contains("uapv")) {
             System.out.println("Bad username format!");
             return false;
         }
-        /*if (!mail.contains("alumni")) {
-            isTeacher = true;
-        }*/
 
-        URL url = new URL("https://cas.univ-avignon.fr/cas/login?service=https%3A%2F%2Fedt.univ-avignon.fr%2Flogin");
+        URL url = new URL("http://127.0.0.1:5000/login");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
         con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", "Java client");
-        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setRequestProperty("Content-Type", "application/json"); // Set header
 
-        String urlParameters = "username=" + URLEncoder.encode(username, "UTF-8") +
-                "&password=" + URLEncoder.encode(password, "UTF-8") +
-                "&_eventId=submit" +
-                "&execution=" + URLEncoder.encode(tokenExecution, "UTF-8");
-
+        // Enable input and output streams
         con.setDoOutput(true);
-        try (OutputStream os = con.getOutputStream()) {
-            byte[] input = urlParameters.getBytes(StandardCharsets.UTF_8);
-            os.write(input, 0, input.length);
+
+        String jsonInputString = "{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}";
+
+        try (DataOutputStream out = new DataOutputStream(con.getOutputStream())) {
+            out.writeBytes(jsonInputString);
+            out.flush();
         }
 
         int responseCode = con.getResponseCode();
         System.out.println("POST Response Code :: " + responseCode);
 
+
         if (responseCode == HttpURLConnection.HTTP_OK) {
             String response = readResponse(con);
-            System.out.println(response);
 
-            // TODO: Read local Session Storage
+            this.token = response.split("\"token\":")[1].split("\"")[1];
+            this.name = response.split("\"name\":")[1].split("\"")[1];
+
+            System.out.println("Token: " + token + ", Name: " + name);
             return true;
         } else {
             System.out.println("POST request not worked");
+            return false;
         }
-
-        return false;
     }
 }
 

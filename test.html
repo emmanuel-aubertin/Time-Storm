@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1 id="token"></h1>
+    <iframe id="inlineFrameExample" title="Inline Frame Example" width="1920" height="1080"
+        src="https://cas.univ-avignon.fr/cas/login?service=https%3A%2F%2Fedt.univ-avignon.fr%2Flogin">
+    </iframe>
+
+    <script>
+        function checkAndDisplayToken() {
+            console.log("checkAndDisplayToken()")
+            if (window.sessionStorage.getItem('token') !== null) {
+                // Use setTimeout to defer the action, preventing it from blocking the DOM
+                setTimeout(() => {
+                    var script = document.createElement('script');
+                    script.textContent = "alert('Token is: ' + window.sessionStorage.getItem('token'));";
+                    document.body.appendChild(script);
+                }, 0); // Setting timeout to 0 ms to make this operation asynchronous
+            } else {
+                setTimeout(() => {
+                    var script = document.createElement('script');
+                    script.textContent = "console.log('Waiting token');";
+                    document.body.appendChild(script);
+                    
+                }, 0);
+                checkAndDisplayToken();
+            }
+        }
+
+        document.getElementById('inlineFrameExample').addEventListener('load', function () {
+            checkAndDisplayToken();
+        });
+
+    </script>
+</body>
+
+</html>
