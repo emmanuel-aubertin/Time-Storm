@@ -54,6 +54,14 @@ public class LoginProvider {
         return response.toString();
     }
 
+    /**
+     * Refresh EDT API token
+     * @return true the token has been refresh successfully
+     * @throws IOException
+     */
+    public boolean refreshToken() throws IOException {
+        return this.tryLogin(username, password);
+    }
 
     /**
      * Get EDT API token from username and password
