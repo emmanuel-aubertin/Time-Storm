@@ -12,8 +12,11 @@ import java.net.URL;
 import java.io.DataOutputStream;
 
 public class LoginProvider {
+    private String username;
+    private String password;
     private String token;
     private String name;
+    private boolean isStudentDOSI;
     private boolean isTeacher;
 
     public LoginProvider() throws IOException {
@@ -51,11 +54,20 @@ public class LoginProvider {
         return response.toString();
     }
 
+
+    /**
+     * Get EDT API token from username and password
+     * @param username
+     * @param password
+     * @return true if user is connected
+     * @throws IOException
+     */
     public boolean tryLogin(String username, String password) throws IOException {
         if (!username.contains("uapv")) {
             System.out.println("Bad username format!");
             return false;
         }
+        this.username = username;
 
         URL url = new URL("http://127.0.0.1:5000/login");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -74,16 +86,17 @@ public class LoginProvider {
         }
 
         int responseCode = con.getResponseCode();
-        System.out.println("POST Response Code :: " + responseCode);
-
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             String response = readResponse(con);
 
             this.token = response.split("\"token\":")[1].split("\"")[1];
             this.name = response.split("\"name\":")[1].split("\"")[1];
+            String isStudentStr = response.split("\"is_student\":")[1].split(",")[0].trim();
+            this.isStudentDOSI = "true".equalsIgnoreCase(isStudentStr);
 
-            System.out.println("Token: " + token + ", Name: " + name);
+            System.out.println("Token: " + token + ", Name: " + name + ", isStudentDOSI:" + isStudentDOSI);
+            this.password = password;
             return true;
         } else {
             System.out.println("POST request not worked");
