@@ -17,10 +17,10 @@ public class LoginProvider {
     private String token;
     private String name;
     private boolean isStudentDOSI;
-    private boolean isTeacher;
+
 
     public LoginProvider() throws IOException {
-        isTeacher = false;
+        isStudentDOSI = true;
     }
 
     /**
@@ -61,6 +61,23 @@ public class LoginProvider {
      */
     public boolean refreshToken() throws IOException {
         return this.tryLogin(username, password);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isStudentDOSI() {
+        return isStudentDOSI;
     }
 
     /**
