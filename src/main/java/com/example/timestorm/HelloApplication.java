@@ -52,6 +52,9 @@ public class HelloApplication extends Application {
             System.out.println(t.getSearchString());
         }
 
+        System.out.println(findTeachers.get(0).getTeacherEdt(user));
+
         launch();
     }
+
 }

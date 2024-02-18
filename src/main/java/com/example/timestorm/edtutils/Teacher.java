@@ -1,5 +1,13 @@
 package com.example.timestorm.edtutils;
 
+import com.example.timestorm.LoginProvider;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 public class Teacher {
     private String FirstName;
     private String LastName;
@@ -36,6 +44,24 @@ public class Teacher {
         return SearchString;
     }
 
+    public JSONObject getTeacherEdt(LoginProvider user) {
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("https://edt-api.univ-avignon.fr/api/events_enseignant/" + this.getUapvHR())
+                    .method("GET", null)
+                    .addHeader("token", user.getToken())
+                    .addHeader("Referer", "https://edt.univ-avignon.fr")
+                    .addHeader("Origin", "https://edt.univ-avignon.fr/")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            return new JSONObject(response.body().string());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public String toString() {
