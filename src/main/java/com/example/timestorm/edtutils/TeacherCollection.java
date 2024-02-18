@@ -11,10 +11,24 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+/**
+ * Represents a collection of teachers at Avignon University.
+ * Provides methods to interact with and retrieve information about teachers.
+ * This class fetches data from Avignon University's API.
+ *
+ * @author Emmanuel Aubertin (from athomisos.com)
+ */
 public class TeacherCollection {
+    // Dictionary with letter and list of teachers
     private final Dictionary<String, ArrayList<Teacher>> teacherDict = new Hashtable<>();
     private final String API_URL = "https://edt-api.univ-avignon.fr/api/enseignants";
 
+    /**
+     * Constructs a TeacherCollection object and populates it with data
+     * retrieved from Avignon University's API using the provided LoginProvider.
+     *
+     * @param user The LoginProvider used to authenticate the API request.
+     */
     public TeacherCollection(LoginProvider user) {
         try {
             OkHttpClient client = new OkHttpClient();
@@ -50,14 +64,19 @@ public class TeacherCollection {
 
                 String letter = resultObj.getString("letter");
                 teacherDict.put(letter, tempTeachers);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
+    /**
+     * Retrieves a list of teachers whose search string matches the provided input string.
+     *
+     * @param inputStr The input string to match against teacher search strings.
+     * @return An ArrayList of Teacher objects whose search strings match the input string.
+     *         Returns null if the input string is empty.
+     */
     public ArrayList<Teacher> getTeacherLike(String inputStr){
         if(inputStr.isEmpty()){
             return null;
@@ -81,8 +100,6 @@ public class TeacherCollection {
                 break;
             }
         }
-
-
         return output;
     }
 }

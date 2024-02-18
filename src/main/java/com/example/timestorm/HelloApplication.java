@@ -1,6 +1,8 @@
 package com.example.timestorm;
 
 
+import com.example.timestorm.edtutils.Classroom;
+import com.example.timestorm.edtutils.ClassroomCollection;
 import com.example.timestorm.edtutils.Teacher;
 import com.example.timestorm.edtutils.TeacherCollection;
 import javafx.application.Application;
@@ -43,7 +45,7 @@ public class HelloApplication extends Application {
         TeacherCollection teacherCollection = new TeacherCollection(user);
 
         System.out.println("Looking for teacher :)");
-        ArrayList<Teacher> findTeachers =  teacherCollection.getTeacherLike("Ma");
+        ArrayList<Teacher> findTeachers =  teacherCollection.getTeacherLike("Amal");
 
         System.out.println("Here is all the teacher found: ");
 
@@ -54,6 +56,11 @@ public class HelloApplication extends Application {
 
         System.out.println(findTeachers.get(0).getTeacherEdt(user));
 
+        ClassroomCollection classroomCollection = new ClassroomCollection(user);
+
+        Classroom stat = classroomCollection.getClassroomLike("Stat 3").get(0);
+
+        System.out.println(stat.getClassroomEdt(user));
         launch();
     }
 
