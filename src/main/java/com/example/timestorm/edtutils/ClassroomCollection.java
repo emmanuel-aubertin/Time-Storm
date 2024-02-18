@@ -11,10 +11,24 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+/**
+ * Represents a collection of classrooms at Avignon University.
+ * Provides methods to interact with and retrieve information about classrooms.
+ * This class fetches data from Avignon University's API.
+ *
+ * @author Emmanuel Aubertin (from athomisos.com)
+ */
 public class ClassroomCollection {
     private final Dictionary<String, ArrayList<Classroom>> classroomDict = new Hashtable<>();
     private ArrayList<String> siteList = new ArrayList<String>();
     private final String API_URL = "https://edt-api.univ-avignon.fr/api/salles";
+
+    /**
+     * Constructs a ClassroomCollection object and populates it with data
+     * retrieved from Avignon University's API using the provided LoginProvider.
+     *
+     * @param user The LoginProvider used to authenticate the API request.
+     */
     public ClassroomCollection(LoginProvider user) {
         try {
             OkHttpClient client = new OkHttpClient();
@@ -57,6 +71,13 @@ public class ClassroomCollection {
         }
     }
 
+    /**
+     * Retrieves a list of classrooms whose search string contains the provided input string.
+     *
+     * @param inputStr The input string to search for within classroom search strings.
+     * @return An ArrayList of Classroom objects whose search strings contain the input string.
+     *         Returns null if the input string is empty.
+     */
     public ArrayList<Classroom> getClassroomLike(String inputStr){
         if(inputStr.isEmpty()) { return null; }
         inputStr = inputStr.toUpperCase();
@@ -68,6 +89,6 @@ public class ClassroomCollection {
                 }
             }
         }
-    return output;
+        return output;
     }
 }
