@@ -1,6 +1,7 @@
 package com.example.timestorm;
 
 
+import com.example.timestorm.edtutils.TeacherCollection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,12 +26,17 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) throws IOException {
         user = new LoginProvider();
-        boolean isLogged = user.tryLogin("uapv2001785", "zujja7-rojsUt-wixduj");
+        boolean isLogged = user.tryLogin("uapv2001785", "xxxx");
         if(isLogged){
             System.out.println("User connected");
         } else {
             System.out.println("User not connected");
         }
+
+        System.out.println(user.getToken());
+
+        TeacherCollection test = new TeacherCollection(user);
+
         launch();
     }
 }

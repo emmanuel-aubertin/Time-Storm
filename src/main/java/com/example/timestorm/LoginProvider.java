@@ -124,7 +124,7 @@ public class LoginProvider {
             this.password = password;
             return true;
         } else {
-            System.out.println("POST request not worked");
+            System.out.println("POST request not worked :: " + responseCode);
             return false;
         }
     }
