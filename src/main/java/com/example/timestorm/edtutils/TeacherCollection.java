@@ -10,10 +10,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.List;
 
 public class TeacherCollection {
-    private final Dictionary<String, List<Teacher>> teacherDict = new Hashtable<>();
+    private final Dictionary<String, ArrayList<Teacher>> teacherDict = new Hashtable<>();
     private final String API_URL = "https://edt-api.univ-avignon.fr/api/enseignants";
 
     public TeacherCollection(LoginProvider user) {
@@ -32,31 +31,58 @@ public class TeacherCollection {
 
             JSONObject teacherJSON = new JSONObject(responseData);
             JSONArray resultsArray = teacherJSON.getJSONArray("results");
-            System.out.println(resultsArray.length());
+
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject resultObj = resultsArray.getJSONObject(i);
-                System.out.println(resultObj.length());
+
                 JSONArray namesArray = resultObj.getJSONArray("names");
-                List<Teacher> tempTeachers = new ArrayList<>();
-                System.out.println("namesArray " + namesArray.length());
+                ArrayList<Teacher> tempTeachers = new ArrayList<>();
+
                 for (int j = 0; j < namesArray.length(); j++) {
                     JSONObject teacherObj = namesArray.getJSONObject(j);
-                    System.out.println("teacherObj " + teacherObj.length());
-                    System.out.println(teacherObj);
+
                     String name = teacherObj.getString("name");
                     String code = teacherObj.getString("code");
                     String uapvRH = teacherObj.getString("uapvRH");
                     String searchString = teacherObj.getString("searchString");
                     tempTeachers.add(new Teacher(name, code, uapvRH, searchString));
-                    System.out.println("Teacher " + name + " added");
                 }
 
                 String letter = resultObj.getString("letter");
                 teacherDict.put(letter, tempTeachers);
-                System.out.println(letter + " Complete");
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public ArrayList<Teacher> getTeacherLike(String inputStr){
+        if(inputStr.isEmpty()){
+            return null;
+        }
+        inputStr = inputStr.toUpperCase();
+        ArrayList<Teacher> teachers = teacherDict.get(String.valueOf(inputStr.charAt(0)));
+        if(inputStr.length() == 1){
+            return teachers;
+        }
+        ArrayList<Teacher> output = new ArrayList<Teacher>();
+        for(int i=0; i < teachers.size(); i++){
+            System.out.println("Checking : "+ teachers.get(i).getSearchString());
+            if(inputStr.length() > teachers.get(i).getSearchString().length()) {continue;}
+            for(int j=0; j < inputStr.length(); j++){
+                if( inputStr.charAt(j) == teachers.get(i).getSearchString().charAt(j)){
+                    if(j ==  inputStr.length()-1){
+                        output.add(teachers.get(i));
+                    }
+                    continue;
+                }
+                break;
+            }
+        }
+
+
+        return output;
     }
 }
