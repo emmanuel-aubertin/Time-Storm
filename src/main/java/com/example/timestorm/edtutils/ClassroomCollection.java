@@ -20,7 +20,7 @@ import java.util.Hashtable;
  */
 public class ClassroomCollection {
     private final Dictionary<String, ArrayList<Classroom>> classroomDict = new Hashtable<>();
-    private ArrayList<String> siteList = new ArrayList<String>();
+    private final ArrayList<String> siteList = new ArrayList<String>();
     private final String API_URL = "https://edt-api.univ-avignon.fr/api/salles";
 
     /**

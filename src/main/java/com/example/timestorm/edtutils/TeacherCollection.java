@@ -88,7 +88,6 @@ public class TeacherCollection {
         }
         ArrayList<Teacher> output = new ArrayList<Teacher>();
         for(int i=0; i < teachers.size(); i++){
-            System.out.println("Checking : "+ teachers.get(i).getSearchString());
             if(inputStr.length() > teachers.get(i).getSearchString().length()) {continue;}
             for(int j=0; j < inputStr.length(); j++){
                 if( inputStr.charAt(j) == teachers.get(i).getSearchString().charAt(j)){

@@ -16,9 +16,9 @@ import java.io.IOException;
  * @author Emmanuel Aubertin (from athomisos.com)
  */
 public class Classroom {
-    private String name;
-    private String code;
-    private String searchString;
+    private final String name;
+    private final String code;
+    private final String searchString;
 
     /**
      * Constructs a Classroom object with the specified parameters.

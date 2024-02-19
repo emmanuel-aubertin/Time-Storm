@@ -15,10 +15,10 @@ import java.io.IOException;
  * @author Emmanuel Aubertin (from athomisos.com)
  */
 public class Teacher {
-    private String Name;
-    private String Code;
-    private String UapvHR;
-    private String SearchString;
+    private final String Name;
+    private final String Code;
+    private final String UapvHR;
+    private final String SearchString;
 
     /**
      * Constructs a Teacher object with the specified parameters.
