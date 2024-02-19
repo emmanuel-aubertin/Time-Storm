@@ -11,7 +11,7 @@ import com.example.timestorm.LoginProvider;
  * The event may also have additional attributes such as type, memo, and favorite status.
  * Note: The class assumes that the title contains specific information about the event, such as teacher and classroom details.
  *
- * @author [Author's Name]
+ * @author Emmanuel Aubertin (from athomisos.com)
  */
 public class Event {
     private String code;
@@ -33,7 +33,7 @@ public class Event {
      * @param favori  The favorite status of the event.
      * @param user    The LoginProvider used to authenticate the API request.
      */
-    public Event(String code, String start, String title, String end, String favori, LoginProvider user) {
+    public Event(String code, String start, String end, String title, String favori, LoginProvider user) {
         this.code = code;
         this.start = start;
         this.end = end;

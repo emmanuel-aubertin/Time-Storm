@@ -4,9 +4,11 @@ import com.example.timestorm.LoginProvider;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Represents a classroom at Avignon University.
@@ -37,10 +39,10 @@ public class Classroom {
      * Retrieves the schedule of the classroom from Avignon University's API using the provided LoginProvider.
      *
      * @param user The LoginProvider used to authenticate the API request.
-     * @return A JSONObject representing the schedule of the classroom.
+     * @return An ArrayList<Event> representing the schedule of the classroom.
      * @throws RuntimeException If an IOException occurs during the API request.
      */
-    public JSONObject getClassroomEdt(LoginProvider user){
+    public ArrayList<Event> getClassroomEdt(LoginProvider user){
         System.out.println("https://edt-api.univ-avignon.fr/api/salles/" + this.code);
         try {
             OkHttpClient client = new OkHttpClient();
@@ -53,7 +55,17 @@ public class Classroom {
                     .build();
 
             Response response = client.newCall(request).execute();
-            return new JSONObject(response.body().string());
+
+            JSONObject resJSON = new JSONObject(response.body().string());
+            JSONArray resultsArray = resJSON.getJSONArray("results");
+            ArrayList<Event> output = new ArrayList<Event>();
+            for (int i = 0; i < resultsArray.length(); i++) {
+                JSONObject resultObj = resultsArray.getJSONObject(i);
+                output.add(new Event(resultObj.getString("code"), resultObj.getString("start"),
+                        resultObj.getString("end"), resultObj.getString("title"),
+                        resultObj.getString("favorite"), user));
+            }
+            return output;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
