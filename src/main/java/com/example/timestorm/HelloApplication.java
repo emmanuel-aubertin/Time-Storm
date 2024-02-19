@@ -2,6 +2,7 @@ package com.example.timestorm;
 
 
 import com.example.timestorm.edtutils.Event;
+import com.example.timestorm.edtutils.PersonalEvents;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -28,7 +29,7 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) throws IOException {
         user = new LoginProvider();
-        boolean isLogged = user.tryLogin("uapv2001785", "voqvYb-mofwe1-cyxdop");
+        boolean isLogged = user.tryLogin("uapv2001785", "jynreq-9ryxko-reNjic");
         if(isLogged){
             System.out.println("User connected");
         } else {
@@ -37,6 +38,8 @@ public class HelloApplication extends Application {
         }
 
         System.out.println(user.getToken());
+        PersonalEvents personalEvents = new PersonalEvents(user);
+        System.out.println(personalEvents);
 /*
         TeacherCollection teacherCollection = new TeacherCollection(user);
 
@@ -59,7 +62,7 @@ public class HelloApplication extends Application {
 
         System.out.println(stat.getClassroomEdt(user));*/
 
-        Event event = new Event("code", "2023-09-11T07:00:00+00:00", "Matière : Reservation de salles\nEnseignant : FREDOUILLE Corinne\nTD : IA-IL-ALT, L3INFO_TD5 ALT, L3INFO_TD6 ALT, M1-IA-IL-ALT, M1-ILSEN-alt, M1-ILSEN-cla-Gr1, M1-ILSEN-cla-Gr2, M1-SICOM-Alt, M1IL-CMI-alt, M1IL-CMI-cla, M2IL-Alt, M2SI-Alt\nSalle : Amphi Ada\nMémo : réunion de rentrée des alternants", "2023-09-11T08:00:00+00:00",  "M1", user);
+        Event event = new Event("code", "2023-09-11T07:00:00+00:00", "2023-09-11T08:00:00+00:00", "Matière : Reservation de salles\nEnseignant : FREDOUILLE Corinne\nTD : IA-IL-ALT, L3INFO_TD5 ALT, L3INFO_TD6 ALT, M1-IA-IL-ALT, M1-ILSEN-alt, M1-ILSEN-cla-Gr1, M1-ILSEN-cla-Gr2, M1-SICOM-Alt, M1IL-CMI-alt, M1IL-CMI-cla, M2IL-Alt, M2SI-Alt\nSalle : Amphi Ada\nMémo : réunion de rentrée des alternants",  "M1", user);
         System.out.println(event);
         launch();
     }
