@@ -15,8 +15,7 @@ import java.io.IOException;
  * @author Emmanuel Aubertin (from athomisos.com)
  */
 public class Teacher {
-    private String FirstName;
-    private String LastName;
+    private String Name;
     private String Code;
     private String UapvHR;
     private String SearchString;
@@ -30,30 +29,19 @@ public class Teacher {
      * @param searchString The search string associated with the teacher (used for matching).
      */
     public Teacher(String name, String code, String uapvHR, String searchString) {
-        String[] nameParts = name.split(" ");
-        FirstName = nameParts[0];
-        LastName = nameParts.length > 1 ? nameParts[1] : "";
+        Name = name;
         Code = code;
         UapvHR = uapvHR;
         SearchString = searchString.toUpperCase();
     }
 
     /**
-     * Gets the first name of the teacher.
-     *
-     * @return The first name of the teacher.
-     */
-    public String getFirstName() {
-        return FirstName;
-    }
-
-    /**
-     * Gets the last name of the teacher.
+     * Gets the name of the teacher.
      *
      * @return The last name of the teacher.
      */
-    public String getLastName() {
-        return LastName;
+    public String getName() {
+        return Name;
     }
 
     /**
@@ -117,8 +105,7 @@ public class Teacher {
     @Override
     public String toString() {
         return "Teacher{" +
-                "FirstName='" + FirstName + '\'' +
-                ", LastName='" + LastName + '\'' +
+                "Name='" + Name + '\'' +
                 ", Code='" + Code + '\'' +
                 ", UapvHR='" + UapvHR + '\'' +
                 ", SearchString='" + SearchString + '\'' +

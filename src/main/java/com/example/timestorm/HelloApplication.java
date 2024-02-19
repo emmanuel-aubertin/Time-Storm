@@ -32,7 +32,7 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) throws IOException {
         user = new LoginProvider();
-        boolean isLogged = user.tryLogin("uapv2001785", "xxx");
+        boolean isLogged = user.tryLogin("uapv2001785", "tozxAn-tekxut-4rerju");
         if(isLogged){
             System.out.println("User connected");
         } else {
@@ -45,13 +45,14 @@ public class HelloApplication extends Application {
         TeacherCollection teacherCollection = new TeacherCollection(user);
 
         System.out.println("Looking for teacher :)");
-        ArrayList<Teacher> findTeachers =  teacherCollection.getTeacherLike("Amal");
+        ArrayList<Teacher> findTeachers =  teacherCollection.getTeacherLike("juanchi");
 
         System.out.println("Here is all the teacher found: ");
 
         for (Teacher t: findTeachers
              ) {
             System.out.println(t.getSearchString());
+            System.out.println(t.getName());
         }
 
         System.out.println(findTeachers.get(0).getTeacherEdt(user));
