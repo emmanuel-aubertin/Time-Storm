@@ -34,7 +34,12 @@ public class Event {
      * @param user    The LoginProvider used to authenticate the API request.
      */
     public Event(String code, String start, String end, String title, String favori, LoginProvider user) {
-        this.code = code;
+        if(code != null){
+            this.code = code;
+        } else {
+            this.code = null;
+        }
+
         this.start = start;
         this.end = end;
 
