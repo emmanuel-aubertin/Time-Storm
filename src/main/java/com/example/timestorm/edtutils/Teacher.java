@@ -8,6 +8,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+/**
+ * Represents a teacher at Avignon University.
+ * Provides methods to retrieve information about the teacher and their schedule.
+ *
+ * @author Emmanuel Aubertin (from athomisos.com)
+ */
 public class Teacher {
     private String FirstName;
     private String LastName;
@@ -15,6 +21,14 @@ public class Teacher {
     private String UapvHR;
     private String SearchString;
 
+    /**
+     * Constructs a Teacher object with the specified parameters.
+     *
+     * @param name         The full name of the teacher.
+     * @param code         The unique code associated with the teacher.
+     * @param uapvHR       The UapvHR (University Avignon HR) identifier for the teacher.
+     * @param searchString The search string associated with the teacher (used for matching).
+     */
     public Teacher(String name, String code, String uapvHR, String searchString) {
         String[] nameParts = name.split(" ");
         FirstName = nameParts[0];
@@ -24,26 +38,58 @@ public class Teacher {
         SearchString = searchString.toUpperCase();
     }
 
+    /**
+     * Gets the first name of the teacher.
+     *
+     * @return The first name of the teacher.
+     */
     public String getFirstName() {
         return FirstName;
     }
 
+    /**
+     * Gets the last name of the teacher.
+     *
+     * @return The last name of the teacher.
+     */
     public String getLastName() {
         return LastName;
     }
 
+    /**
+     * Gets the unique code associated with the teacher.
+     *
+     * @return The code of the teacher.
+     */
     public String getCode() {
         return Code;
     }
 
+    /**
+     * Gets the UapvHR identifier of the teacher.
+     *
+     * @return The UapvHR identifier of the teacher.
+     */
     public String getUapvHR() {
         return UapvHR;
     }
 
+    /**
+     * Gets the search string associated with the teacher.
+     *
+     * @return The search string of the teacher.
+     */
     public String getSearchString() {
         return SearchString;
     }
 
+    /**
+     * Retrieves the schedule of the teacher from the Avignon University's API using the provided LoginProvider.
+     *
+     * @param user The LoginProvider used to authenticate the API request.
+     * @return A JSONObject representing the schedule of the teacher.
+     * @throws RuntimeException If an IOException occurs during the API request.
+     */
     public JSONObject getTeacherEdt(LoginProvider user) {
         try {
             OkHttpClient client = new OkHttpClient();
@@ -63,6 +109,11 @@ public class Teacher {
         }
     }
 
+    /**
+     * Returns a string representation of the Teacher object.
+     *
+     * @return A string representation of the Teacher object.
+     */
     @Override
     public String toString() {
         return "Teacher{" +
@@ -74,5 +125,3 @@ public class Teacher {
                 '}';
     }
 }
-
-
