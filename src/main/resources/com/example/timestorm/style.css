@@ -60,3 +60,9 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
 }
+
+.error-text {
+    -fx-font-size: 12px; /* Slightly smaller than your input fields to differentiate it */
+    -fx-text-fill: #FF5555ff; /* Bright red color for visibility */
+    -fx-padding: 5; /* Adjust padding as needed */
+}

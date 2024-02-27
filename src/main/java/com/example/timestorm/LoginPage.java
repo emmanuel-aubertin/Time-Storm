@@ -1,12 +1,12 @@
 package com.example.timestorm;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-
-import java.io.IOException;
 
 public class LoginPage {
     @FXML
@@ -21,15 +21,47 @@ public class LoginPage {
     public LoginProvider user = new LoginProvider();
 
     @FXML
-    private void handleLogin() throws IOException {
-        // TODO: make it in other thread and add a loarder
-        boolean isLogged = HelloApplication.user.tryLogin(usernameField.getText(), passwordField.getText());
-        if(isLogged){
-            System.out.println("User connected");
-        } else {
-            System.out.println("User not connected");
-        }
+    private void handleLogin() {
+        // Remove existing error
+        formContainer.getChildren().removeIf(node -> node instanceof Label && node.getStyleClass().contains("error-text"));
+
+        Label loaderLabel = new Label("Logging in...");
+        formContainer.getChildren().add(loaderLabel);
+
+        Task<Boolean> loginTask = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                return HelloApplication.user.tryLogin(usernameField.getText(), passwordField.getText());
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                boolean isLogged = getValue();
+                if (isLogged) {
+                    System.out.println("User connected");
+
+                } else {
+                    System.out.println("User not connected");
+                    Label errorLabel = new Label("Wrong username or password !");
+                    errorLabel.getStyleClass().add("error-text");
+                    formContainer.getChildren().add(errorLabel);
+                }
+                formContainer.getChildren().remove(loaderLabel); // Remove loader from the UI
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                System.out.println("Login failed");
+                formContainer.getChildren().remove(loaderLabel);
+            }
+        };
+
+        Thread loginThread = new Thread(loginTask);
+        loginThread.start();
     }
+
 
     @FXML
     public void initialize() {
