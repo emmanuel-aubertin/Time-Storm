@@ -19,10 +19,10 @@ import java.util.Hashtable;
  * @author Emmanuel Aubertin (from athomisos.com)
  */
 public class ClassroomCollection {
-    private final Dictionary<String, ArrayList<Classroom>> classroomDict = new Hashtable<>();
-    private final ArrayList<String> siteList = new ArrayList<String>();
+    private static final Dictionary<String, ArrayList<Classroom>> classroomDict = new Hashtable<>();
+    private static final ArrayList<String> siteList = new ArrayList<String>();
     private final String API_URL = "https://edt-api.univ-avignon.fr/api/salles";
-
+    private static boolean isInitialized = false;
     /**
      * Constructs a ClassroomCollection object and populates it with data
      * retrieved from Avignon University's API using the provided LoginProvider.
@@ -56,19 +56,24 @@ public class ClassroomCollection {
                 for (int j = 0; j < namesArray.length(); j++) {
                     JSONObject classroomObj = namesArray.getJSONObject(j);
 
-                    String name = classroomObj.getString("name");
-                    String code = classroomObj.getString("code");
-                    String searchString = classroomObj.getString("searchString");
+                    String name = classroomObj.optString("name");
+                    String code = classroomObj.optString("code");
+                    String searchString = classroomObj.optString("searchString");
                     tempClassrooms.add(new Classroom(name, code, searchString));
                 }
 
-                String letter = resultObj.getString("letter");
+                String letter = resultObj.optString("letter");
                 siteList.add(letter);
                 classroomDict.put(letter, tempClassrooms);
+                isInitialized = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isIsInitialized() {
+        return  isInitialized;
     }
 
     /**
@@ -78,7 +83,7 @@ public class ClassroomCollection {
      * @return An ArrayList of Classroom objects whose search strings contain the input string.
      *         Returns null if the input string is empty.
      */
-    public ArrayList<Classroom> getClassroomLike(String inputStr){
+    public static ArrayList<Classroom> getClassroomLike(String inputStr){
         if(inputStr.isEmpty()) { return null; }
         inputStr = inputStr.toUpperCase();
         ArrayList<Classroom> output = new ArrayList<>();

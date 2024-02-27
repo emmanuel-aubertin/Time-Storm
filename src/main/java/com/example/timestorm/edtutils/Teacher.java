@@ -98,9 +98,11 @@ public class Teacher {
             ArrayList<Event> output = new ArrayList<Event>();
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject resultObj = resultsArray.getJSONObject(i);
-                output.add(new Event(resultObj.getString("code"), resultObj.getString("start"),
-                        resultObj.getString("end"), resultObj.getString("title"),
-                        resultObj.getString("favorite"), user));
+                System.out.println(resultObj);
+
+                output.add(new Event(resultObj.optString("code"), resultObj.optString("start"),
+                        resultObj.optString("end"), resultObj.optString("title"),
+                        resultObj.optString("favorite"), user));
             }
             return output;
         } catch (IOException e) {

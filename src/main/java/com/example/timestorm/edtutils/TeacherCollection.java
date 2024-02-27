@@ -20,9 +20,10 @@ import java.util.Hashtable;
  */
 public class TeacherCollection {
     // Dictionary with letter and list of teachers
-    private final Dictionary<String, ArrayList<Teacher>> teacherDict = new Hashtable<>();
+    private static final Dictionary<String, ArrayList<Teacher>> teacherDict = new Hashtable<>();
     private final String API_URL = "https://edt-api.univ-avignon.fr/api/enseignants";
 
+    private static boolean isInitialized = false;
     /**
      * Constructs a TeacherCollection object and populates it with data
      * retrieved from Avignon University's API using the provided LoginProvider.
@@ -56,18 +57,23 @@ public class TeacherCollection {
                     JSONObject teacherObj = namesArray.getJSONObject(j);
 
                     String name = teacherObj.getString("name");
-                    String code = teacherObj.getString("code");
+                    String code = teacherObj.optString("code");
                     String uapvRH = teacherObj.getString("uapvRH");
                     String searchString = teacherObj.getString("searchString");
                     tempTeachers.add(new Teacher(name, code, uapvRH, searchString));
                 }
 
-                String letter = resultObj.getString("letter");
+                String letter = resultObj.optString("letter");
                 teacherDict.put(letter, tempTeachers);
+                isInitialized = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isIsInitialized() {
+        return  isInitialized;
     }
 
     /**
@@ -77,7 +83,7 @@ public class TeacherCollection {
      * @return An ArrayList of Teacher objects whose search strings match the input string.
      *         Returns null if the input string is empty.
      */
-    public ArrayList<Teacher> getTeacherLike(String inputStr){
+    public static ArrayList<Teacher> getTeacherLike(String inputStr){
         if(inputStr.isEmpty()){
             return null;
         }

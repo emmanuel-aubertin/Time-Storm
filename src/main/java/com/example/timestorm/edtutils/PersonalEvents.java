@@ -40,9 +40,9 @@ public class PersonalEvents {
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject resultObj = resultsArray.getJSONObject(i);
                 tasks.add(() -> {
-                    System.out.println(resultObj.getString("title"));
-                    persoEvents.add(new Event("", resultObj.getString("start"),
-                            resultObj.getString("end"), resultObj.getString("title"),
+                    System.out.println(resultObj.optString("title"));
+                    persoEvents.add(new Event("", resultObj.optString("start"),
+                            resultObj.optString("end"), resultObj.optString("title"),
                             "", user));
                     return null;
                 });
