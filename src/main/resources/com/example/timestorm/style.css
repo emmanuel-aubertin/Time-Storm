@@ -39,3 +39,30 @@
 .prussian-blue {
     color: #0C2538ff;
 }
+
+.text-field, .password-field {
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-background-color: #0C2538ff;
+    -fx-text-fill: #E6E4D8ff;
+}
+
+.login-button {
+    -fx-background-color: #0C2538ff;
+    -fx-text-fill: #E6E4D8ff;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+}
+
+#myAnchorPane {
+    -fx-background-image: url('dark_forest.png');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
+
+.error-text {
+    -fx-font-size: 12px; /* Slightly smaller than your input fields to differentiate it */
+    -fx-text-fill: #FF5555ff; /* Bright red color for visibility */
+    -fx-padding: 5; /* Adjust padding as needed */
+}
