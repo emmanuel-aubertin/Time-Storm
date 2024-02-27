@@ -37,7 +37,7 @@ public class Event {
         if(code != null){
             this.code = code;
         } else {
-            this.code = null;
+            this.code = "";
         }
 
         this.start = start;
@@ -57,10 +57,9 @@ public class Event {
         }
 
         if (title.contains("Enseignant : ")) {
-            TeacherCollection teachers = new TeacherCollection(user);
             String[] teacherSplit = title.split("Enseignant : ");
-            if (teacherSplit.length > 1) {
-                teacher = teachers.getTeacherLike(teacherSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
+            if (teacherSplit.length > 1 && TeacherCollection.isIsInitialized()) {
+                teacher = TeacherCollection.getTeacherLike(teacherSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
             } else {
                 teacher = null;
             }
@@ -69,10 +68,9 @@ public class Event {
         }
 
         if (title.contains("Salle : ")) {
-            ClassroomCollection classrooms = new ClassroomCollection(user);
             String[] classroomSplit = title.split("Salle : ");
-            if (classroomSplit.length > 1) {
-                classroom = classrooms.getClassroomLike(classroomSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
+            if (classroomSplit.length > 1 && ClassroomCollection.isIsInitialized()) {
+                classroom = ClassroomCollection.getClassroomLike(classroomSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
             } else {
                 classroom = null;
             }
