@@ -19,7 +19,7 @@ public class LoginProvider {
     private boolean isStudentDOSI;
 
 
-    public LoginProvider() throws IOException {
+    public LoginProvider(){
         isStudentDOSI = true;
     }
 
