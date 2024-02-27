@@ -22,8 +22,13 @@ public class LoginPage {
 
     @FXML
     private void handleLogin() throws IOException {
-        System.out.println("Username : " + usernameField.getText());
-        System.out.println("Password : " + passwordField.getText());
+        // TODO: make it in other thread and add a loarder
+        boolean isLogged = HelloApplication.user.tryLogin(usernameField.getText(), passwordField.getText());
+        if(isLogged){
+            System.out.println("User connected");
+        } else {
+            System.out.println("User not connected");
+        }
     }
 
     @FXML
@@ -36,7 +41,6 @@ public class LoginPage {
     }
 
     private void adjustFormWidth(Scene scene) {
-        System.out.println("Widows has been resized !");
         if (scene != null && formContainer != null) {
             // Bind the VBox (formContainer) prefWidthProperty to half of the scene's width
             formContainer.prefWidthProperty().bind(scene.widthProperty().multiply(0.5));

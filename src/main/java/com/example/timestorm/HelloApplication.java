@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
 
-    private static LoginProvider user;
+    public static LoginProvider user = new LoginProvider();
 
 
 
@@ -24,6 +24,7 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) throws IOException {
+
         launch();
     }
 
