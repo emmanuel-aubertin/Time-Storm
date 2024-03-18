@@ -12,8 +12,6 @@ public class HelloApplication extends Application {
 
     public static LoginProvider user = new LoginProvider();
 
-
-
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-page.fxml"));

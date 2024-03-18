@@ -7,6 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.stage.Stage;
 
 public class LoginPage {
     @FXML
@@ -40,7 +44,25 @@ public class LoginPage {
                 boolean isLogged = getValue();
                 if (isLogged) {
                     System.out.println("User connected");
-
+            
+                    // Load the home page FXML file
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("home-page.fxml"));
+                        Parent root = loader.load();
+            
+                        // Get the HomePageController instance
+                        HomePageController homePageController = loader.getController();
+            
+                        // Pass any necessary data to the HomePageController, if needed
+            
+                        // Set the new scene with the home page root
+                        Stage primaryStage = (Stage) usernameField.getScene().getWindow();
+                        Scene homeScene = new Scene(root);
+                        primaryStage.setScene(homeScene);
+                        primaryStage.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     System.out.println("User not connected");
                     Label errorLabel = new Label("Wrong username or password !");
@@ -49,7 +71,6 @@ public class LoginPage {
                 }
                 formContainer.getChildren().remove(loaderLabel); // Remove loader from the UI
             }
-
             @Override
             protected void failed() {
                 super.failed();
