@@ -1,7 +1,11 @@
 package com.example.timestorm;
 
+import com.example.timestorm.edtutils.ClassroomCollection;
+import com.example.timestorm.edtutils.TeacherCollection;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -40,6 +44,26 @@ public class LoginPage {
                 boolean isLogged = getValue();
                 if (isLogged) {
                     System.out.println("User connected");
+                    // initialisation
+                    TeacherCollection.getInstance();
+                    ClassroomCollection.getInstance();
+
+                    try {
+                        // Load the InputPage FXML
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("InputPage.fxml"));
+                        Parent root = loader.load();
+
+                        // Get the current scene and set the new root
+                        Scene currentScene = usernameField.getScene();
+                        if (currentScene != null) {
+                            currentScene.setRoot(root);
+                        } else {
+                            System.out.println("Error: Scene is null");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Failed to load InputPage.fxml");
+                    }
 
                 } else {
                     System.out.println("User not connected");
@@ -49,6 +73,7 @@ public class LoginPage {
                 }
                 formContainer.getChildren().remove(loaderLabel); // Remove loader from the UI
             }
+
 
             @Override
             protected void failed() {
