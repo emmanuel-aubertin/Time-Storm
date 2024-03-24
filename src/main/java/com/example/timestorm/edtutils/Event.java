@@ -59,7 +59,7 @@ public class Event {
         if (title.contains("Enseignant : ")) {
             String[] teacherSplit = title.split("Enseignant : ");
             if (teacherSplit.length > 1 && TeacherCollection.isIsInitialized()) {
-                teacher = TeacherCollection.getTeacherLike(teacherSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
+                teacher = TeacherCollection.getInstance().getTeacherLike(teacherSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
             } else {
                 teacher = null;
             }

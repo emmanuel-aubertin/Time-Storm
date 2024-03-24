@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.timestorm.InputPage">
+    <VBox alignment="CENTER" spacing="10.0" layoutX="200" layoutY="200">
+        <TextField fx:id="inputField" onKeyTyped="#handleInput" promptText="Type something..."/>
+        <Text fx:id="seeChoice">Test</Text>
+    </VBox>
+</AnchorPane>

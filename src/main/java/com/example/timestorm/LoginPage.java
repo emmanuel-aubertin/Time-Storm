@@ -1,7 +1,11 @@
 package com.example.timestorm;
 
+import com.example.timestorm.edtutils.ClassroomCollection;
+import com.example.timestorm.edtutils.TeacherCollection;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -44,6 +48,10 @@ public class LoginPage {
                 boolean isLogged = getValue();
                 if (isLogged) {
                     System.out.println("User connected");
+                    // initialisation
+                    TeacherCollection.getInstance();
+                    ClassroomCollection.getInstance();
+
             
                     // Load the home page FXML file
                     try {
@@ -71,6 +79,7 @@ public class LoginPage {
                 }
                 formContainer.getChildren().remove(loaderLabel); // Remove loader from the UI
             }
+
             @Override
             protected void failed() {
                 super.failed();
