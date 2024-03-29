@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Region?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <HBox spacing="10" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="btnDark" text="Dark" />
+                <Button fx:id="btnHome" text="Home" />
+                <Button fx:id="btnFormation" text="Formation" />
+                <Button fx:id="btnSalle" text="Salle" />
+                <Button fx:id="btnPersonnel" text="Personnel"  />
+                <Region HBox.hgrow="ALWAYS" />
+                <DatePicker />
+                <ToggleButton text="Jour" toggleGroup="$viewToggleGroup" selected="true" />
+                <ToggleButton text="SEMAINE" toggleGroup="$viewToggleGroup" />
+                <ToggleButton text="Mois" toggleGroup="$viewToggleGroup" />
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="10.0">
+            <children>
+                <TextField fx:id="searchField" promptText="Recherchez emploi du temps par formation" HBox.hgrow="ALWAYS" />
+                <!-- Add other center content here -->
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

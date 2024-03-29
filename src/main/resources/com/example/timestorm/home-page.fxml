@@ -8,36 +8,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.timestorm.HomePageController">
    <center>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
    <top>
     <HBox spacing="10" BorderPane.alignment="CENTER">
         <children>
-            <Button text="Dark" />
-            <Button text="Home" />
-            <Button text="Formation" />
-            <Button text="Salle" />
-            <Button text="Personnel" />
+            <Button fx:id="btnDark" text="Dark" />
+            <Button fx:id="btnHome" text="Home" />
+            <Button fx:id="btnFormation" text="Formation" onAction="#onFormationButtonClick"/>
+            <Button fx:id="btnSalle" text="Salle" onAction="#onSalleButtonClick"/>
+            <Button fx:id="btnPersonnel" text="Personnel" onAction="#onPersonnelButtonClick" />
             <Region HBox.hgrow="ALWAYS" />
             <DatePicker />
-            <ToggleButton text="Jour">
-                <toggleGroup>
-                    <ToggleGroup fx:id="typeToggleGroup" />
-                </toggleGroup>
-            </ToggleButton>
-            <ToggleButton text="Mois">
-                <toggleGroup>
-                    <ToggleGroup fx:id="typeToggleGroup" />
-                </toggleGroup>
-            </ToggleButton>
-            <ToggleButton text="Année">
-                <toggleGroup>
-                    <ToggleGroup fx:id="typeToggleGroup" />
-                </toggleGroup>
-            </ToggleButton>
-        </children>
+                <ToggleButton text="Jour" toggleGroup="$viewToggleGroup" selected="true" />
+                <ToggleButton text="Semaine" toggleGroup="$viewToggleGroup" />
+                <ToggleButton text="Mois" toggleGroup="$viewToggleGroup" />
+            </children>
     </HBox>
 </top>
 </BorderPane>

@@ -26,7 +26,7 @@ public class LoginPage {
     @FXML
     private VBox formContainer; // Assuming you have a VBox container for your form elements
 
-    public LoginProvider user = new LoginProvider();
+    
 
     @FXML
     private void handleLogin() {
