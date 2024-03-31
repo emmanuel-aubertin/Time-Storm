@@ -10,10 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 public class LoginPage {
@@ -26,7 +24,6 @@ public class LoginPage {
     @FXML
     private VBox formContainer; // Assuming you have a VBox container for your form elements
 
-    
 
     @FXML
     private void handleLogin() {
@@ -95,11 +92,25 @@ public class LoginPage {
 
     @FXML
     public void initialize() {
-        // Ensure that the usernameField has been injected correctly
+
         if (usernameField != null) {
-            // Add a listener to the scene property to ensure we have a scene
             usernameField.sceneProperty().addListener((observable, oldScene, newScene) -> adjustFormWidth(newScene));
+
+            usernameField.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    handleLogin();
+                }
+            });
         }
+
+        if (passwordField != null) {
+            passwordField.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    handleLogin();
+                }
+            });
+        }
+
     }
 
     private void adjustFormWidth(Scene scene) {
@@ -108,4 +119,6 @@ public class LoginPage {
             formContainer.prefWidthProperty().bind(scene.widthProperty().multiply(0.5));
         }
     }
+
+
 }
