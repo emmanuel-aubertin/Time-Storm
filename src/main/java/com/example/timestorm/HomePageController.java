@@ -160,7 +160,7 @@ public class HomePageController {
 
             if (scene != null) { // add a null check
                 scene.getStylesheets().clear();
-                scene.getStylesheets().add(getClass().getResource("/css/dark.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
             }
 
         } else {
@@ -170,7 +170,7 @@ public class HomePageController {
 
             if (scene != null) { // add a null check
                 scene.getStylesheets().clear();
-                scene.getStylesheets().add(getClass().getResource("/css/light.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
             }
 
         }
@@ -341,7 +341,7 @@ public class HomePageController {
         eventRectangle.setPrefHeight(25 * rowSpan);
         eventRectangle.setMinWidth(0);
         eventRectangle.getStyleClass().add("rect");
-        eventRectangle.setOpacity(0.7);
+
 
         eventRectangle.prefWidthProperty().bind(parentContainer.widthProperty().subtract(92).divide(dayNumber));
 
@@ -385,6 +385,7 @@ public class HomePageController {
         calendar.prefWidthProperty().bind(parentContainer.widthProperty());
         calendar.setHgap(5);
         calendar.setVgap(5);
+        calendar.setOpacity(0.8);
 
         // Adjust maximum width to consider padding/margin
         calendar.setMaxWidth(parentContainer.getWidth() - 16);
@@ -433,7 +434,8 @@ public class HomePageController {
                 }
 
                 if (eventDayColumn > 0) {
-                    calendar.add(getEvent(event, rowSpan), eventDayColumn, eventStartIndex, 1, rowSpan);
+                    StackPane eventRectangle = getEvent(event, rowSpan);
+                    calendar.add(eventRectangle, eventDayColumn, eventStartIndex, 1, rowSpan);
                 }
             }
         }
