@@ -5,12 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
@@ -51,8 +46,7 @@ public class HomePageController {
     private ToggleButton btnSalle;
     @FXML
     private ToggleButton btnPersonnel;
-    @FXML
-    private ToggleButton btnHome;
+
     @FXML
     private Button btnDark;
 
@@ -61,7 +55,7 @@ public class HomePageController {
     private TextField inputField;
 
     private ArrayList<Event> events = new ArrayList<>();
-
+    private int dayNumber = 1;
     private AutoCompletionBinding<String> autoCompletionBinding;
     @FXML
     public void initialize() {
@@ -73,7 +67,6 @@ public class HomePageController {
         monthBtn.setToggleGroup(viewToggleGroup);
 
         btnPersonnel.setToggleGroup(edtToggleGroup);
-        btnHome.setToggleGroup(edtToggleGroup);
         btnSalle.setToggleGroup(edtToggleGroup);
         btnFormation.setToggleGroup(edtToggleGroup);
         btnEnseignant.setToggleGroup(edtToggleGroup);
@@ -82,6 +75,27 @@ public class HomePageController {
         dayBtn.setSelected(true);
     }
 
+    @FXML
+    public void onClickDay() {
+        dayNumber = 1;
+        System.out.println("dayNumber " + dayNumber);
+    }
+
+    @FXML
+    public void onClickWeek() {
+        dayNumber = 7;
+        ArrayList<Event> filteredEvents = new ArrayList<>();
+        calendarContainer.getChildren().clear();
+        filteredEvents = filterEventsByWeek(events, datePicker.getValue());
+        GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
+
+
+        calendarContainer.getChildren().add(dayCalendar);
+        System.out.println("dayNumber " + dayNumber);
+        for (Event e : filteredEvents) {
+            System.out.println(e.toString());
+        }
+    }
 
     @FXML
     public void onFormationButtonClick() throws IOException {
@@ -186,15 +200,14 @@ public class HomePageController {
                 System.out.println(teacherSuggestions.get(0).getCode());
                 events = teacherSuggestions.get(0).getClassroomEdt(HelloApplication.user);
                 ArrayList<Event> filteredEvents = new ArrayList<>();
-                LocalDate selectedDate = datePicker.getValue();
-                System.out.println("Date selected");
-                filteredEvents = filterEventsByDay(events, selectedDate);
+
+                filteredEvents = filterEventsByDay(events, datePicker.getValue());
                 for (Event e: filteredEvents
                      ) {
                     System.out.println(e.toString());
                 }
                 System.out.println("filteredEvents");
-                GridPane dayCalendar = createDayCalendar(selectedDate, filteredEvents);
+                GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
                 System.out.println(dayCalendar.toString());
                 calendarContainer.getChildren().clear();
                 calendarContainer.getChildren().add(dayCalendar);
@@ -271,66 +284,118 @@ public class HomePageController {
         return timeSlots;
     }
 
+    private StackPane getEvent(Event event, double rowSpan) {
+        double initialWidth = parentContainer.getWidth() - 16;
+        Pane eventRectangle = new Pane();
+        eventRectangle.setPrefHeight(25 * rowSpan);
+        eventRectangle.setMinWidth(0);
+        eventRectangle.getStyleClass().add("rect");
+        eventRectangle.setOpacity(0.9);
+
+        // Bind the rectangle's width to the parent container's width with adjustments
+        eventRectangle.prefWidthProperty().bind(parentContainer.widthProperty().subtract(92).divide(dayNumber));
+
+        Label eventLabel = new Label(String.format("Matière : %s\nEnseignant : %s\nTD : %s\nSalle : %s\nType : %s",
+                event.getCode(), event.getTeacher().getName(),
+                event.getType(), event.getClassroom().getName(),
+                event.getType()));
+        eventLabel.setFont(new Font(12));
+        eventLabel.setTextAlignment(TextAlignment.CENTER);
+        eventLabel.setWrapText(true);
+
+        StackPane eventStackPane = new StackPane(eventRectangle, eventLabel);
+        Tooltip tooltip = new Tooltip(eventLabel.getText());
+        Tooltip.install(eventStackPane, tooltip);
+        eventStackPane.minWidth(0);
+        eventStackPane.prefWidthProperty().bind(parentContainer.widthProperty().subtract(86 + 16));
+        return eventStackPane;
+    }
+
     private GridPane createDayCalendar(LocalDate date, List<Event> events) {
         List<LocalTime> timeSlots = generateTimeSlots();
         GridPane calendar = new GridPane();
+        calendar.setMinWidth(0);
+        calendar.prefWidthProperty().bind(parentContainer.widthProperty());
         calendar.setHgap(5);
         calendar.setVgap(5);
 
-        // Set the maximum width of the calendar to the parent container's width
-        calendar.setMaxWidth(parentContainer.getWidth());
-        double parentWidth = parentContainer.getWidth();
-        double parentHeight = parentContainer.getHeight();
+        // Adjust maximum width to consider padding/margin
+        calendar.setMaxWidth(parentContainer.getWidth() - 16);
+
         // Set a fixed width for the first column (hours column)
-        ColumnConstraints columnConstraints = new ColumnConstraints(60); // Fixed width for the first column
-        calendar.getColumnConstraints().add(columnConstraints);
+        ColumnConstraints hourColumnConstraints = new ColumnConstraints(60);
+        calendar.getColumnConstraints().add(hourColumnConstraints);
+
+        for (int day = 1; day <= dayNumber; day++) {
+            ColumnConstraints dayColumnConstraints = new ColumnConstraints();
+            dayColumnConstraints.prefWidthProperty().bind(
+                    parentContainer.widthProperty().subtract(76).divide(dayNumber));
+            calendar.getColumnConstraints().add(dayColumnConstraints);
+        }
 
         for (int rowIndex = 0; rowIndex < timeSlots.size(); rowIndex++) {
             LocalTime timeSlot = timeSlots.get(rowIndex);
             Label timeLabel = new Label(timeSlot.format(DateTimeFormatter.ofPattern("HH:mm")));
             calendar.add(timeLabel, 0, rowIndex);
 
-            // Track used columns in this row to avoid overlapping
-            HashSet<Integer> usedColumns = new HashSet<>();
-
             for (Event event : events) {
                 ZonedDateTime eventStart = ZonedDateTime.parse(event.getStart()).plusHours(2);
                 ZonedDateTime eventEnd = ZonedDateTime.parse(event.getEnd()).plusHours(2);
 
-                if (!eventStart.toLocalDate().isEqual(date)) continue;
+                if (!eventStart.toLocalDate().isEqual(date) && dayNumber == 1) continue;
 
-                // Simplified event in timeslot check
                 boolean isInTimeSlot = !eventStart.toLocalTime().isBefore(timeSlot) && eventEnd.toLocalTime().isAfter(timeSlot);
                 if (!isInTimeSlot) continue;
 
                 int eventStartIndex = Math.max(timeSlots.indexOf(eventStart.toLocalTime().truncatedTo(ChronoUnit.MINUTES)), 0);
                 int eventEndIndex = Math.min(timeSlots.indexOf(eventEnd.toLocalTime().truncatedTo(ChronoUnit.MINUTES)), timeSlots.size() - 1);
 
-                if (eventStartIndex == -1 || eventEndIndex == -1) continue; // Event times not in slots
+                if (eventStartIndex == -1 || eventEndIndex == -1) continue;
 
                 int rowSpan = eventEndIndex - eventStartIndex + 1;
-                Rectangle eventRectangle = new Rectangle(parentWidth - 65, 25 * rowSpan, Color.BLUE);
-                Label eventLabel = new Label(String.format("Matière : %s\nEnseignant : %s\nTD : %s\nSalle : %s\nType : %s",
-                        event.getCode(), event.getTeacher().getName(),
-                        event.getType(), event.getClassroom().getName(),
-                        event.getType()));
-                eventLabel.setTextFill(Color.WHITE);
-                eventLabel.setFont(new Font(12));
-                eventLabel.setTextAlignment(TextAlignment.CENTER);
-                eventLabel.setWrapText(true);
 
-                StackPane eventStackPane = new StackPane(eventRectangle, eventLabel);
-                Tooltip tooltip = new Tooltip(eventLabel.getText());
-                Tooltip.install(eventStackPane, tooltip);
+                int eventDayColumn = 1;
+                if(dayNumber == 7) {
+                    eventDayColumn = calculateEventDayColumn(event);
+                }
 
-
-
-                calendar.add(eventStackPane, 1, eventStartIndex, 1, rowSpan);
+                if(eventDayColumn > 0) {
+                    calendar.add(getEvent(event, rowSpan), eventDayColumn, eventStartIndex, 1, rowSpan);
+                }
             }
         }
 
-        calendar.setMaxHeight(parentHeight - 50);
+        calendar.setMaxHeight(parentContainer.getHeight() - 50); // Adjust for bottom padding/margin
         return calendar;
+    }
+
+
+    public static int calculateEventDayColumn(Event event) {
+        // Assuming event.getStart() returns a date time string in ISO format
+        LocalDate eventDate = LocalDate.parse(event.getStart(), DateTimeFormatter.ISO_DATE_TIME);
+
+        // Get the day of the week for the event's start date
+        DayOfWeek dayOfWeek = eventDate.getDayOfWeek();
+
+        // Map the day of the week to a column index (1 for Monday, 2 for Tuesday, ...)
+        switch (dayOfWeek) {
+            case MONDAY:
+                return 1;
+            case TUESDAY:
+                return 2;
+            case WEDNESDAY:
+                return 3;
+            case THURSDAY:
+                return 4;
+            case FRIDAY:
+                return 5;
+            case SATURDAY:
+                return 6;
+            case SUNDAY:
+                return 7;
+            default:
+                return -1; // Default case, though it should never be reached
+        }
     }
 
 

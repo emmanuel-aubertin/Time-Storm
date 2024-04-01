@@ -41,3 +41,14 @@
     -fx-background-color: #0C2538ff;
     -fx-text-fill: #E6E4D8ff;
 }
+
+.label {
+    -fx-text-fill: #E6E4D8ff;
+}
+
+.rect {
+    -fx-background-color: #0C2538ff; /* Make this work for a Rectangle */
+    -fx-text-fill: #E6E4D8ff;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+}

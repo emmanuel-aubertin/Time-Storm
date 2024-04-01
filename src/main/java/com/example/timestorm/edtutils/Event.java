@@ -141,6 +141,9 @@ public class Event {
      * @return The teacher of the event.
      */
     public Teacher getTeacher() {
+        if(teacher == null){
+            return new Teacher("Inconnu", "Inconnu", "Inconnu", "Inconnu");
+        }
         return teacher;
     }
 
@@ -150,6 +153,9 @@ public class Event {
      * @return The classroom of the event.
      */
     public Classroom getClassroom() {
+        if(classroom == null){
+            return new Classroom("Inconnu", "Inconnu", "Inconnu");
+        }
         return classroom;
     }
 

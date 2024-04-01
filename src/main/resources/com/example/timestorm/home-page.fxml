@@ -19,12 +19,12 @@
             <bottom>
                 <HBox alignment="CENTER" spacing="10" BorderPane.alignment="CENTER">
                     <children>
-                        <ToggleButton fx:id="dayBtn" opacity="0.9" selected="true" styleClass="button" text="Jour">
+                        <ToggleButton fx:id="dayBtn" opacity="0.9" selected="true" styleClass="button" onAction="#onClickDay" text="Jour">
                             <toggleGroup>
                                 <ToggleGroup fx:id="viewToggleGroup" />
                             </toggleGroup>
                         </ToggleButton>
-                        <ToggleButton fx:id="weekBtn" opacity="0.9" styleClass="button" text="Semaine" toggleGroup="$viewToggleGroup" />
+                        <ToggleButton fx:id="weekBtn" opacity="0.9" styleClass="button" onAction="#onClickWeek" text="Semaine" toggleGroup="$viewToggleGroup" />
                         <ToggleButton fx:id="monthBtn" opacity="0.9" styleClass="button" text="Mois" toggleGroup="$viewToggleGroup" />
                     </children>
                     <BorderPane.margin>
@@ -35,15 +35,10 @@
             <top>
                 <HBox alignment="TOP_CENTER" spacing="10" BorderPane.alignment="TOP_CENTER">
                     <children>
-                        <ToggleButton fx:id="btnHome" contentDisplay="CENTER" onAction="#onHomeButtonClick" opacity="0.9" selected="true" styleClass="button" text="Home">
-                            <toggleGroup>
-                                <ToggleGroup fx:id="edtToggleGroup" />
-                            </toggleGroup>
-                        </ToggleButton>
                         <ToggleButton fx:id="btnEnseignant" onAction="#onFormationButtonClick" opacity="0.9" styleClass="button" text="Enseignant" toggleGroup="$edtToggleGroup" />
                         <ToggleButton fx:id="btnFormation" onAction="#onFormationButtonClick" opacity="0.9" styleClass="button" text="Formation" toggleGroup="$edtToggleGroup" />
                         <ToggleButton fx:id="btnSalle" onAction="#onFormationButtonClick" opacity="0.9" styleClass="button" text="Salle" toggleGroup="$edtToggleGroup" />
-                        <ToggleButton fx:id="btnPersonnel" onAction="#onPersonnelButtonClick" opacity="0.9" styleClass="button" text="Personnel" toggleGroup="$edtToggleGroup" />
+                        <ToggleButton fx:id="btnPersonnel" onAction="#onPersonnelButtonClick" opacity="0.9" styleClass="button" text="Personnel" toggleGroup="$edtToggleGroup" selected="true" />
                         <DatePicker fx:id="datePicker"/>
                     </children>
                     <BorderPane.margin>
