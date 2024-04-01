@@ -1,5 +1,7 @@
 package com.example.timestorm.edtutils;
 
+import java.time.ZonedDateTime;
+
 import com.example.timestorm.LoginProvider;
 
 /**
@@ -86,6 +88,11 @@ public class Event {
         }
 
         this.favori = favori;
+    }
+
+    public Event(ZonedDateTime startTime, ZonedDateTime endTime, String title, String memo2, String type2,
+            String teacherCode, String classroomCode, String promoCode) {
+        //TODO Auto-generated constructor stub
     }
 
     /**
