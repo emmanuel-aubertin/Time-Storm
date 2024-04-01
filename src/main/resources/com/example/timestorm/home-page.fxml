@@ -25,7 +25,6 @@
                             </toggleGroup>
                         </ToggleButton>
                         <ToggleButton fx:id="weekBtn" opacity="0.9" styleClass="button" onAction="#onClickWeek" text="Semaine" toggleGroup="$viewToggleGroup" />
-                        <ToggleButton fx:id="monthBtn" opacity="0.9" styleClass="button" text="Mois" toggleGroup="$viewToggleGroup" />
                     </children>
                     <BorderPane.margin>
                         <Insets bottom="8.0" />
@@ -50,7 +49,7 @@
                 </HBox>
             </top>
          <center>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <BorderPane prefHeight="200.0" prefWidth="200.0"  BorderPane.alignment="CENTER">
                 <top>
                     <TextField fx:id="inputField" onKeyTyped="#handleInput" opacity="0.9" promptText="Type something..." visible="false">
                      <BorderPane.margin>

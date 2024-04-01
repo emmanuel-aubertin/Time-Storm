@@ -46,9 +46,25 @@
     -fx-text-fill: #383616;
 }
 
+.button:selected {
+    -fx-background-color: #67652Aff;
+}
+
+
 .rect {
-    -fx-background-color: #E6E4D8ff; /* Make this work for a Rectangle */
-    -fx-text-fill: #383616;
+    -fx-background-color: #E6E4D8ff;
+    -fx-background-radius: 10;
+    -fx-border-color: #ADA67Dff;
+    -fx-border-radius: 10;
     -fx-padding: 10;
+}
+
+.white-background-opacity {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-border-radius: 3;
+}
+
+.rect .text-label {
+    -fx-text-fill: #383616;
     -fx-font-size: 14px;
 }

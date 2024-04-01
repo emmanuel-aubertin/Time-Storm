@@ -61,3 +61,7 @@
     -fx-text-fill: #E6E4D8ff;
     -fx-font-size: 14px;
 }
+
+.white-background-opacity {
+    -fx-background-color: rgba(51, 51, 51, 0.3);
+}

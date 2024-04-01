@@ -43,8 +43,6 @@ public class HomePageController {
     @FXML
     public ToggleButton weekBtn;
     @FXML
-    public ToggleButton monthBtn;
-    @FXML
     private ToggleButton btnFormation;
     @FXML
     private ToggleButton btnSalle;
@@ -68,7 +66,6 @@ public class HomePageController {
 
         dayBtn.setToggleGroup(viewToggleGroup);
         weekBtn.setToggleGroup(viewToggleGroup);
-        monthBtn.setToggleGroup(viewToggleGroup);
 
         btnPersonnel.setToggleGroup(edtToggleGroup);
         btnSalle.setToggleGroup(edtToggleGroup);
@@ -89,7 +86,6 @@ public class HomePageController {
         Platform.runLater(() -> {
             updateCalendar("week");
         });
-
     }
 
     private void updateCalendar(String type){
@@ -385,8 +381,8 @@ public class HomePageController {
         for (int rowIndex = 0; rowIndex < timeSlots.size(); rowIndex++) {
             LocalTime timeSlot = timeSlots.get(rowIndex);
             Label timeLabel = new Label(timeSlot.format(DateTimeFormatter.ofPattern("HH:mm")));
+            timeLabel.getStyleClass().add("white-background-opacity");
             calendar.add(timeLabel, 0, rowIndex);
-
             for (Event event : events) {
                 ZonedDateTime eventStart = ZonedDateTime.parse(event.getStart()).plusHours(2);
                 ZonedDateTime eventEnd = ZonedDateTime.parse(event.getEnd()).plusHours(2);
