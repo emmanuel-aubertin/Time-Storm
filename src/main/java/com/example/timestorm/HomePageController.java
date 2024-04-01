@@ -1,30 +1,32 @@
 package com.example.timestorm;
 
 import java.io.IOException;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class HomePageController {
-    private LoginProvider user;
+    
+    private static boolean darkMode = false;
 
-    public void setUser(LoginProvider user) {
-        this.user = user;
-    }
-
-    @FXML
-    private TextField searchField;
     @FXML
     private Button btnFormation;
     @FXML
     private Button btnSalle;
     @FXML
     private Button btnPersonnel;
+    @FXML
+    private Button btnHome;
+    @FXML
+    private Button btnDark;
+
+    @FXML
+    public void initialize() {
+        setMode(darkMode);
+    }
 
     @FXML
     public void onFormationButtonClick() throws IOException {
@@ -41,8 +43,6 @@ public class HomePageController {
    public void onSalleButtonClick() throws IOException {
        FXMLLoader loader = new FXMLLoader(getClass().getResource("classroom-view.fxml"));
        Parent root = loader.load();
-       ClassroomViewController classroomViewController = loader.getController();
-       classroomViewController.setUser(user);
    
        Scene scene = new Scene(root);
        Stage stage = (Stage) btnSalle.getScene().getWindow(); // Replaced btnFormation with btnSalle
@@ -57,8 +57,41 @@ public class HomePageController {
      Parent root = loader.load();
  
      Scene scene = new Scene(root);
-     Stage stage = (Stage) btnFormation.getScene().getWindow();
+     Stage stage = (Stage) btnPersonnel.getScene().getWindow();
      stage.setScene(scene);
      stage.show();
  }
+
+    @FXML
+    public void onHomeButtonClick() throws IOException {
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("home-page.fxml"));
+    Parent root = loader.load();
+
+    Scene scene = new Scene(root);
+    Stage stage = (Stage) btnHome.getScene().getWindow();
+    stage.setScene(scene);
+    stage.show();
+    }
+    @FXML
+    public void onDarkButtonClick() {
+        darkMode = !darkMode;
+        setMode(darkMode);
+    }
+
+
+    private void setMode(boolean darkMode) {
+        if (darkMode) {
+            btnDark.setText("Light");
+            // Apply dark mode stylesheet
+            Scene scene = btnFormation.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("/css/dark.css").toExternalForm());
+        } else {
+            btnDark.setText("Dark");
+            // Apply light mode stylesheet
+            Scene scene = btnFormation.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("/css/light.css").toExternalForm());
+        }
+    }
 }

@@ -1,0 +1,12 @@
+/* light.css */
+
+.root {
+    -fx-background-color: #f0f0f0; /* Light gray background */
+    -fx-text-fill: #000000; /* Black text */
+}
+
+.button {
+    -fx-background-color: #ffffff; /* White button background */
+    -fx-text-fill: #000000; /* Black button text */
+}
+
