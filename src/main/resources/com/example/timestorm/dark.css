@@ -29,12 +29,15 @@
 }
 
 .button {
+    /*background-color #43687Fff For selected toogle button*/
     -fx-background-color: #0C2538ff;
     -fx-text-fill: #E6E4D8ff;
     -fx-padding: 10;
     -fx-font-size: 14px;
 }
-
+.button:selected {
+    -fx-background-color: #43687Fff;
+}
 .text-field, .password-field {
     -fx-font-size: 14px;
     -fx-padding: 10;
@@ -47,8 +50,14 @@
 }
 
 .rect {
-    -fx-background-color: #0C2538ff; /* Make this work for a Rectangle */
-    -fx-text-fill: #E6E4D8ff;
+    -fx-background-color: #0C2538ff;
+    -fx-background-radius: 10; /* Adjust the radius value as needed for rounded corners */
+    -fx-border-color: #43687Fff; /* Set the border color */
+    -fx-border-radius: 10; /* Match this with background radius for consistent rounded corners */
     -fx-padding: 10;
+}
+
+.rect .text-label {
+    -fx-text-fill: #E6E4D8ff;
     -fx-font-size: 14px;
 }

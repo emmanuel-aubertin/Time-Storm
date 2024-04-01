@@ -1,6 +1,7 @@
 package com.example.timestorm;
 
 import com.example.timestorm.edtutils.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -17,11 +18,14 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class HomePageController {
-
+    private boolean isOk = true;
     @FXML
     public ToggleButton btnEnseignant;
     @FXML
@@ -72,30 +76,55 @@ public class HomePageController {
         btnEnseignant.setToggleGroup(edtToggleGroup);
 
 
-        dayBtn.setSelected(true);
+        weekBtn.setSelected(true);
+        datePicker.setValue(LocalDate.now());
+        PersonalEvents personalEvents = new PersonalEvents(HelloApplication.user);
+        events = personalEvents.getEvents();
+        datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Call the onChangeDate method whenever the date changes
+            onChangeDate(newValue);
+        });
+
+
+        Platform.runLater(() -> {
+            updateCalendar("week");
+        });
+
+    }
+
+    private void updateCalendar(String type){
+        ArrayList<Event> filteredEvents = new ArrayList<>();
+        calendarContainer.getChildren().clear();
+        if(Objects.equals(type, "week")) {
+            dayNumber = 7;
+            filteredEvents = filterEventsByWeek(events, datePicker.getValue());
+        } else if (Objects.equals(type, "day")) {
+            dayNumber = 1;
+            filteredEvents = filterEventsByDay(events, datePicker.getValue());
+        }
+        GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
+        calendarContainer.getChildren().add(dayCalendar);
+    }
+
+    private void onChangeDate(LocalDate newDate) {
+        if(dayNumber == 7) {
+            updateCalendar("week");
+        } else if (dayNumber == 1) {
+            updateCalendar("day");
+        }
     }
 
     @FXML
     public void onClickDay() {
-        dayNumber = 1;
-        System.out.println("dayNumber " + dayNumber);
+        updateCalendar("day");
     }
 
     @FXML
     public void onClickWeek() {
-        dayNumber = 7;
-        ArrayList<Event> filteredEvents = new ArrayList<>();
-        calendarContainer.getChildren().clear();
-        filteredEvents = filterEventsByWeek(events, datePicker.getValue());
-        GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
-
-
-        calendarContainer.getChildren().add(dayCalendar);
-        System.out.println("dayNumber " + dayNumber);
-        for (Event e : filteredEvents) {
-            System.out.println(e.toString());
-        }
+        updateCalendar("week");
     }
+
+
 
     @FXML
     public void onFormationButtonClick() throws IOException {
@@ -111,7 +140,15 @@ public class HomePageController {
     @FXML
     public void onPersonnelButtonClick() throws IOException {
         inputField.setVisible(false);
- }
+        datePicker.setValue(LocalDate.now());
+        PersonalEvents personalEvents = new PersonalEvents(HelloApplication.user);
+        events = personalEvents.getEvents();
+        if(dayNumber == 7) {
+            updateCalendar("week");
+        } else if (dayNumber == 1) {
+            updateCalendar("day");
+        }
+    }
 
     @FXML
     public void onHomeButtonClick() throws IOException {
@@ -122,6 +159,7 @@ public class HomePageController {
         HelloApplication.darkMode = !HelloApplication.darkMode;
         setMode(HelloApplication.darkMode);
     }
+
 
 
     private void setMode(boolean darkMode) {
@@ -191,9 +229,20 @@ public class HomePageController {
                 TeacherCollection instance = TeacherCollection.getInstance();
                 ArrayList<Teacher> teacherSuggestions = instance.getTeacherLike(currentText);
 
-                if(Objects.equals(teacherSuggestions.get(0).getName(), selectedItem)){
-                    events = teacherSuggestions.get(0).getTeacherEvents(HelloApplication.user);
+                events = teacherSuggestions.get(0).getTeacherEvents(HelloApplication.user);
+                ArrayList<Event> filteredEvents = new ArrayList<>();
+
+                filteredEvents = filterEventsByDay(events, datePicker.getValue());
+                for (Event e: filteredEvents
+                ) {
+                    System.out.println(e.toString());
                 }
+                System.out.println("filteredEvents");
+                GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
+                System.out.println(dayCalendar.toString());
+                calendarContainer.getChildren().clear();
+                calendarContainer.getChildren().add(dayCalendar);
+                System.out.println("GridPane added");
             } else if (Objects.equals(selectedButtonText.get(), "btnSalle")) {
                 ClassroomCollection instance = ClassroomCollection.getInstance();
                 ArrayList<Classroom> teacherSuggestions = instance.getClassroomLike(currentText);
@@ -290,13 +339,13 @@ public class HomePageController {
         eventRectangle.setPrefHeight(25 * rowSpan);
         eventRectangle.setMinWidth(0);
         eventRectangle.getStyleClass().add("rect");
-        eventRectangle.setOpacity(0.9);
+        eventRectangle.setOpacity(0.7);
 
         // Bind the rectangle's width to the parent container's width with adjustments
         eventRectangle.prefWidthProperty().bind(parentContainer.widthProperty().subtract(92).divide(dayNumber));
 
-        Label eventLabel = new Label(String.format("Matière : %s\nEnseignant : %s\nTD : %s\nSalle : %s\nType : %s",
-                event.getCode(), event.getTeacher().getName(),
+        Label eventLabel = new Label(String.format("Matière : %s\nEnseignant : %s\nType : %s\nSalle : %s\nType : %s",
+                event.getTitle(), event.getTeacher().getName(),
                 event.getType(), event.getClassroom().getName(),
                 event.getType()));
         eventLabel.setFont(new Font(12));

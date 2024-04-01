@@ -19,6 +19,7 @@ public class Event {
     private String end;
     private String type;
     private String memo;
+    private String title;
     private String favori;
     private Teacher teacher;
     private Classroom classroom;
@@ -43,6 +44,12 @@ public class Event {
         this.start = start;
         this.end = end;
 
+        if (title.contains("Matière : ")) {
+            String[] typeSplit = title.split("Matière : ");
+            this.title = typeSplit.length > 1 ? typeSplit[1].split("\n")[0] : null;
+        } else {
+            this.type = null;
+        }
         if (title.contains("Type : ")) {
             String[] typeSplit = title.split("Type : ");
             this.type = typeSplit.length > 1 ? typeSplit[1].split("\n")[0] : null;
@@ -159,6 +166,9 @@ public class Event {
         return classroom;
     }
 
+    public String getTitle(){
+        return title;
+    }
     /**
      * Returns a string representation of the Event object.
      *
