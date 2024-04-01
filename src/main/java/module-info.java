@@ -3,7 +3,9 @@ module com.example.timestorm {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
-
+    requires jsoup;
+    requires okhttp3;
+    requires org.json;
     opens com.example.timestorm to javafx.fxml;
     exports com.example.timestorm;
 }

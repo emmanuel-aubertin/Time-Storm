@@ -1,20 +1,20 @@
-/* CSS HEX */
-.alabaster {
-    color: #E6E4D8ff;
-}
- 
-.sage {
-    color: #ADA67Dff;
+
+.login-button {
+    -fx-background-color: #0C2538ff;
+    -fx-text-fill: #E6E4D8ff;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
 }
 
-.air-force-blue {
-    color: #6695A8ff;
+#myAnchorPane {
+    -fx-background-image: url('dark_forest.png');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
 }
 
-.slate-gray {
-    color: #607F89ff
-}
-
-.dark-moss-green {
-    color: #67652Aff;
+.error-text {
+    -fx-font-size: 12px; /* Slightly smaller than your input fields to differentiate it */
+    -fx-text-fill: #FF5555ff; /* Bright red color for visibility */
+    -fx-padding: 5; /* Adjust padding as needed */
 }
