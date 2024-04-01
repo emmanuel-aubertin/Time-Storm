@@ -52,13 +52,13 @@ public class HomePageController {
     @FXML
     private Button btnDark;
 
-
     @FXML
     private TextField inputField;
 
     private ArrayList<Event> events = new ArrayList<>();
-    private int dayNumber = 1;
+    private int dayNumber = 7;
     private AutoCompletionBinding<String> autoCompletionBinding;
+
     @FXML
     public void initialize() {
         viewToggleGroup = new ToggleGroup();
@@ -72,7 +72,6 @@ public class HomePageController {
         btnFormation.setToggleGroup(edtToggleGroup);
         btnEnseignant.setToggleGroup(edtToggleGroup);
 
-
         weekBtn.setSelected(true);
         datePicker.setValue(LocalDate.now());
         PersonalEvents personalEvents = new PersonalEvents(HelloApplication.user);
@@ -82,16 +81,15 @@ public class HomePageController {
             onChangeDate(newValue);
         });
 
-
         Platform.runLater(() -> {
             updateCalendar("week");
         });
     }
 
-    private void updateCalendar(String type){
+    private void updateCalendar(String type) {
         ArrayList<Event> filteredEvents = new ArrayList<>();
         calendarContainer.getChildren().clear();
-        if(Objects.equals(type, "week")) {
+        if (Objects.equals(type, "week")) {
             dayNumber = 7;
             filteredEvents = filterEventsByWeek(events, datePicker.getValue());
         } else if (Objects.equals(type, "day")) {
@@ -103,7 +101,7 @@ public class HomePageController {
     }
 
     private void onChangeDate(LocalDate newDate) {
-        if(dayNumber == 7) {
+        if (dayNumber == 7) {
             updateCalendar("week");
         } else if (dayNumber == 1) {
             updateCalendar("day");
@@ -121,18 +119,15 @@ public class HomePageController {
 
     }
 
-
-
     @FXML
     public void onFormationButtonClick() throws IOException {
         inputField.setVisible(true);
-   }
+    }
 
-   @FXML
-   public void onSalleButtonClick() throws IOException {
-       inputField.setVisible(true);
-   }
-   
+    @FXML
+    public void onSalleButtonClick() throws IOException {
+        inputField.setVisible(true);
+    }
 
     @FXML
     public void onPersonnelButtonClick() throws IOException {
@@ -140,7 +135,7 @@ public class HomePageController {
         datePicker.setValue(LocalDate.now());
         PersonalEvents personalEvents = new PersonalEvents(HelloApplication.user);
         events = personalEvents.getEvents();
-        if(dayNumber == 7) {
+        if (dayNumber == 7) {
             updateCalendar("week");
         } else if (dayNumber == 1) {
             updateCalendar("day");
@@ -151,14 +146,12 @@ public class HomePageController {
     public void onHomeButtonClick() throws IOException {
         inputField.setVisible(false);
     }
-    
+
     @FXML
     public void onDarkButtonClick() {
         HelloApplication.darkMode = !HelloApplication.darkMode;
         setMode(HelloApplication.darkMode);
     }
-
-
 
     private void setMode(boolean darkMode) {
         if (darkMode) {
@@ -209,7 +202,7 @@ public class HomePageController {
             for (Classroom t : teacherSuggestions) {
                 suggestions.add(t.getName());
             }
-        }else if (Objects.equals(selectedButtonText.get(), "btnFormation")) {
+        } else if (Objects.equals(selectedButtonText.get(), "btnFormation")) {
             System.out.println(selectedButtonText.get());
             PromotionCollection instance = PromotionCollection.getInstance();
             ArrayList<Promotion> teacherSuggestions = instance.getPromotionLike(currentText);
@@ -218,19 +211,15 @@ public class HomePageController {
             }
         }
 
-
-
-
         // Dispose of the old autocompletion binding if it exists
         if (autoCompletionBinding != null) {
             autoCompletionBinding.dispose();
         }
 
-
-        Callback<AutoCompletionBinding.ISuggestionRequest, Collection<String>> suggestionProvider =
-                request -> suggestions.stream()
-                        .filter(suggestion -> suggestion.toLowerCase().contains(request.getUserText().toLowerCase()))
-                        .toList();
+        Callback<AutoCompletionBinding.ISuggestionRequest, Collection<String>> suggestionProvider = request -> suggestions
+                .stream()
+                .filter(suggestion -> suggestion.toLowerCase().contains(request.getUserText().toLowerCase()))
+                .toList();
 
         autoCompletionBinding = TextFields.bindAutoCompletion(inputField, suggestionProvider);
 
@@ -243,61 +232,43 @@ public class HomePageController {
                 ArrayList<Teacher> teacherSuggestions = instance.getTeacherLike(currentText);
 
                 events = teacherSuggestions.get(0).getTeacherEvents(HelloApplication.user);
-                ArrayList<Event> filteredEvents = new ArrayList<>();
 
-                filteredEvents = filterEventsByDay(events, datePicker.getValue());
-                for (Event e: filteredEvents
-                ) {
-                    System.out.println(e.toString());
+
+                if (dayNumber == 7) {
+                    events = filterEventsByWeek(events, datePicker.getValue());
+                    updateCalendar("week");
+                } else if (dayNumber == 1) {
+                    events = filterEventsByDay(events, datePicker.getValue());
+                    updateCalendar("day");
                 }
-                System.out.println("filteredEvents");
-                GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
-                System.out.println(dayCalendar.toString());
-                calendarContainer.getChildren().clear();
-                calendarContainer.getChildren().add(dayCalendar);
-                System.out.println("GridPane added");
             } else if (Objects.equals(selectedButtonText.get(), "btnSalle")) {
                 ClassroomCollection instance = ClassroomCollection.getInstance();
                 ArrayList<Classroom> teacherSuggestions = instance.getClassroomLike(currentText);
                 System.out.println(teacherSuggestions.get(0).getCode());
                 events = teacherSuggestions.get(0).getClassroomEdt(HelloApplication.user);
-                ArrayList<Event> filteredEvents = new ArrayList<>();
-
-                filteredEvents = filterEventsByDay(events, datePicker.getValue());
-                for (Event e: filteredEvents
-                     ) {
-                    System.out.println(e.toString());
+                if (dayNumber == 7) {
+                    events = filterEventsByWeek(events, datePicker.getValue());
+                    updateCalendar("week");
+                } else if (dayNumber == 1) {
+                    events = filterEventsByDay(events, datePicker.getValue());
+                    updateCalendar("day");
                 }
-                System.out.println("filteredEvents");
-                GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
-                System.out.println(dayCalendar.toString());
-                calendarContainer.getChildren().clear();
-                calendarContainer.getChildren().add(dayCalendar);
                 System.out.println("GridPane added");
-                }else if (Objects.equals(selectedButtonText.get(), "btnFormation")) {
-                PromotionCollection instance =  PromotionCollection.getInstance();
-                ArrayList< Promotion> teacherSuggestions = instance.getPromotionLike(currentText);
+            } else if (Objects.equals(selectedButtonText.get(), "btnFormation")) {
+                PromotionCollection instance = PromotionCollection.getInstance();
+                ArrayList<Promotion> teacherSuggestions = instance.getPromotionLike(currentText);
                 System.out.println(teacherSuggestions.get(0).getCode());
                 events = teacherSuggestions.get(0).getPromotionEdt(HelloApplication.user);
-                ArrayList<Event> filteredEvents = new ArrayList<>();
-
-                filteredEvents = filterEventsByDay(events, datePicker.getValue());
-                for (Event e: filteredEvents
-                ) {
-                    System.out.println(e.toString());
+                if (dayNumber == 7) {
+                    events = filterEventsByWeek(events, datePicker.getValue());
+                    updateCalendar("week");
+                } else if (dayNumber == 1) {
+                    events = filterEventsByDay(events, datePicker.getValue());
+                    updateCalendar("day");
                 }
-                System.out.println("filteredEvents");
-                GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
-                System.out.println(dayCalendar.toString());
-                calendarContainer.getChildren().clear();
-                calendarContainer.getChildren().add(dayCalendar);
-                System.out.println("GridPane added");
             }
-        }
-        );
+        });
     }
-
-
 
     private ArrayList<Event> filterEventsByDay(ArrayList<Event> events, LocalDate date) {
         ArrayList<Event> filteredEvents = new ArrayList<>();
@@ -423,24 +394,30 @@ public class HomePageController {
                 ZonedDateTime eventStart = ZonedDateTime.parse(event.getStart()).plusHours(2);
                 ZonedDateTime eventEnd = ZonedDateTime.parse(event.getEnd()).plusHours(2);
 
-                if (!eventStart.toLocalDate().isEqual(date) && dayNumber == 1) continue;
+                if (!eventStart.toLocalDate().isEqual(date) && dayNumber == 1)
+                    continue;
 
-                boolean isInTimeSlot = !eventStart.toLocalTime().isBefore(timeSlot) && eventEnd.toLocalTime().isAfter(timeSlot);
-                if (!isInTimeSlot) continue;
+                boolean isInTimeSlot = !eventStart.toLocalTime().isBefore(timeSlot)
+                        && eventEnd.toLocalTime().isAfter(timeSlot);
+                if (!isInTimeSlot)
+                    continue;
 
-                int eventStartIndex = Math.max(timeSlots.indexOf(eventStart.toLocalTime().truncatedTo(ChronoUnit.MINUTES)), 0);
-                int eventEndIndex = Math.min(timeSlots.indexOf(eventEnd.toLocalTime().truncatedTo(ChronoUnit.MINUTES)), timeSlots.size() - 1);
+                int eventStartIndex = Math
+                        .max(timeSlots.indexOf(eventStart.toLocalTime().truncatedTo(ChronoUnit.MINUTES)), 0);
+                int eventEndIndex = Math.min(timeSlots.indexOf(eventEnd.toLocalTime().truncatedTo(ChronoUnit.MINUTES)),
+                        timeSlots.size() - 1);
 
-                if (eventStartIndex == -1 || eventEndIndex == -1) continue;
+                if (eventStartIndex == -1 || eventEndIndex == -1)
+                    continue;
 
                 int rowSpan = eventEndIndex - eventStartIndex + 1;
 
                 int eventDayColumn = 1;
-                if(dayNumber == 7) {
+                if (dayNumber == 7) {
                     eventDayColumn = calculateEventDayColumn(event);
                 }
 
-                if(eventDayColumn > 0) {
+                if (eventDayColumn > 0) {
                     calendar.add(getEvent(event, rowSpan), eventDayColumn, eventStartIndex, 1, rowSpan);
                 }
             }
@@ -449,7 +426,6 @@ public class HomePageController {
         calendar.setMaxHeight(parentContainer.getHeight() - 50); // Adjust for bottom padding/margin
         return calendar;
     }
-
 
     public static int calculateEventDayColumn(Event event) {
         // Assuming event.getStart() returns a date time string in ISO format
@@ -478,7 +454,5 @@ public class HomePageController {
                 return -1; // Default case, though it should never be reached
         }
     }
-
-
 
 }
