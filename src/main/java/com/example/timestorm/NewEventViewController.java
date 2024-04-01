@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
 
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
@@ -92,17 +93,17 @@ public class NewEventViewController {
     @FXML
     void onCreateEventButtonClick(ActionEvent event) throws IOException {
         String title = titleField.getText();
-        String startTime = startTimeField.getText();
-        String endTime = endTimeField.getText();
+        String startTime = startTimeComboBox.getValue(); // Retrieve start time from combo box
+        String endTime = endTimeComboBox.getValue(); // Retrieve end time from combo box
         String memo = memoField.getText();
         String type = typeField.getText();
         String teacherCode = teacherCodeField.getText();
         String classroomCode = classroomCodeField.getText();
         String promoCode = promoCodeField.getText();
-
+    
         // Create the request body
         String requestBody = "{\"title\": \"" + title + "\", \"start\": \"" + startTime + "\", \"end\": \"" + endTime + "\", \"memo\": \"" + memo + "\", \"type\": \"" + type + "\", \"teacher_code\": \"" + teacherCode + "\", \"classroom_code\": \"" + classroomCode + "\", \"promo_code\": \"" + promoCode + "\"}";
-
+    
         // Set up the connection
         URL url = new URL("http://127.0.0.1:5000/event/create");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -110,13 +111,13 @@ public class NewEventViewController {
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("Authorization", "Bearer " + HelloApplication.user.getToken());
         con.setDoOutput(true);
-
+    
         // Send the request
         try (DataOutputStream out = new DataOutputStream(con.getOutputStream())) {
             out.writeBytes(requestBody);
             out.flush();
         }
-
+    
         // Check the response code
         int responseCode = con.getResponseCode();
         if (responseCode == 200) {
@@ -128,18 +129,18 @@ public class NewEventViewController {
                 responseBody.append(inputLine);
             }
             in.close();
-
+    
             // Show a success alert with the response body
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
             alert.setHeaderText("Event created successfully!");
             alert.setContentText("Response body: " + responseBody.toString());
             alert.showAndWait();
-
+    
             // Clear the input fields
             titleField.clear();
-            startTimeField.clear();
-            endTimeField.clear();
+            startTimeComboBox.getSelectionModel().clearSelection(); // Clear selection from combo box
+            endTimeComboBox.getSelectionModel().clearSelection(); // Clear selection from combo box
             memoField.clear();
             typeField.clear();
             teacherCodeField.clear();
@@ -153,8 +154,8 @@ public class NewEventViewController {
             alert.setContentText("Response code: " + responseCode);
             alert.showAndWait();
         }
-
     }
+    
 
     @FXML
     private void handleTeacherCodeInput(KeyEvent event) {

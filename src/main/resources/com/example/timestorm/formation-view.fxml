@@ -21,7 +21,7 @@
             <children>
                 <HBox spacing="10">
                     <children>
-                        <Button fx:id="btnDark" text="Dark" onAction=""/>
+                        <Button fx:id="btnDark" text="Dark" />
                         <Button fx:id="btnHome" text="Home" onAction="#onHomeButtonClick"/>
                         <Button fx:id="btnFormation" text="Formation" onAction="#onFormationButtonClick"/>
                         <Button fx:id="btnSalle" text="Salle" onAction="#onSalleButtonClick"/>
