@@ -1,65 +1,57 @@
-
-
 package com.example.timestorm;
-import com.example.timestorm.HelloApplication;
+
 import com.example.timestorm.edtutils.Classroom;
 import com.example.timestorm.edtutils.ClassroomCollection;
 import com.example.timestorm.edtutils.Event;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.io.IOException;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 
 
 
-public class ClassroomViewController {
-
-    private LoginProvider user;
-    public void setUser(LoginProvider user) {
-        this.user = user;
-    }
-
+public class ClassroomViewController{
     @FXML
     private DatePicker datePicker;
-
     @FXML
     private TextField searchField;
-
     @FXML
     private ToggleButton jourToggleButton;
+    @FXML
     private ToggleButton semaineToggleButton;
+    @FXML
     private ToggleButton moisToggleButton;
-    private ToggleGroup viewToggleGroup;
     @FXML
     private VBox parentContainer;
-
     @FXML
     private StackPane calendarContainer;
+    @FXML
+    private Button btnFormation;
+    @FXML
+    private Button btnSalle;
+    @FXML
+    private Button btnPersonnel;
+    @FXML
+    private Button btnHome;
 
     public void initialize() {
         // Définir la date par défaut sur la date actuelle
@@ -69,6 +61,53 @@ public class ClassroomViewController {
         calendarContainer.prefWidthProperty().bind(parentContainer.widthProperty());
         calendarContainer.prefHeightProperty().bind(parentContainer.heightProperty());
     }
+
+    @FXML
+    public void onFormationButtonClick() throws IOException {
+       FXMLLoader loader = new FXMLLoader(getClass().getResource("formation-view.fxml"));
+       Parent root = loader.load();
+   
+       Scene scene = new Scene(root);
+       Stage stage = (Stage) btnFormation.getScene().getWindow();
+       stage.setScene(scene);
+       stage.show();
+    }
+
+   @FXML
+   public void onSalleButtonClick() throws IOException {
+       FXMLLoader loader = new FXMLLoader(getClass().getResource("classroom-view.fxml"));
+       Parent root = loader.load();
+   
+       Scene scene = new Scene(root);
+       Stage stage = (Stage) btnSalle.getScene().getWindow(); // Replaced btnFormation with btnSalle
+       stage.setScene(scene);
+       stage.show();
+    }
+   
+
+    @FXML
+    public void onPersonnelButtonClick() throws IOException {
+     FXMLLoader loader = new FXMLLoader(getClass().getResource("personnel-view.fxml"));
+     Parent root = loader.load();
+ 
+     Scene scene = new Scene(root);
+     Stage stage = (Stage) btnPersonnel.getScene().getWindow();
+     stage.setScene(scene);
+     stage.show();
+    }
+
+    @FXML
+    public void onHomeButtonClick() throws IOException {
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("home-page.fxml"));
+    Parent root = loader.load();
+
+    Scene scene = new Scene(root);
+    Stage stage = (Stage) btnHome.getScene().getWindow();
+    stage.setScene(scene);
+    stage.show();
+    }
+
+
 
     @FXML
     private void handleSearch(ActionEvent event) {
@@ -82,7 +121,8 @@ public class ClassroomViewController {
         }
 
         // Perform the search after ensuring data is initialized
-        ArrayList<Classroom> searchResult = ClassroomCollection.getClassroomLike(searchString);
+        ClassroomCollection instance = ClassroomCollection.getInstance();
+        ArrayList<Classroom> searchResult = instance.getClassroomLike(searchString);
         if (searchResult != null) {
             for (Classroom classroom : searchResult) {
                 System.out.println(classroom); // Print the search result in the terminal
@@ -213,8 +253,16 @@ private GridPane createDayCalendar(LocalDate date, List<Event> events) {
                 (eventEnd.toLocalTime().isAfter(timeSlot) && eventEnd.toLocalTime().isBefore(timeSlot.plusMinutes(30))) ||
                 (eventStart.toLocalTime().isBefore(timeSlot) && eventEnd.toLocalTime().isAfter(timeSlot.plusMinutes(30)))
             ) {
-                int eventStartIndex = timeSlots.indexOf(eventStart.toLocalTime().truncatedTo(ChronoUnit.MINUTES));
-                int eventEndIndex = timeSlots.indexOf(eventEnd.toLocalTime().truncatedTo(ChronoUnit.MINUTES));
+                LocalTime startTime = eventStart.toLocalTime().truncatedTo(ChronoUnit.MINUTES);
+                LocalTime endTime = eventEnd.toLocalTime().truncatedTo(ChronoUnit.MINUTES);
+                int eventStartIndex = timeSlots.indexOf(startTime);
+                int eventEndIndex = timeSlots.indexOf(endTime);
+
+                // If the event start or end time is not in the timeSlots list, skip this event
+                if (eventStartIndex == -1 || eventEndIndex == -1) {
+                    continue;
+                }
+
                 int rowSpan = eventEndIndex - eventStartIndex + 1;
 
                 Rectangle eventRectangle = new Rectangle();
@@ -262,5 +310,5 @@ private GridPane createDayCalendar(LocalDate date, List<Event> events) {
 
 
 
-}
 
+}

@@ -104,7 +104,7 @@ public class ClassroomCollection {
      * @return An ArrayList of Classroom objects whose search strings contain the input string.
      *         Returns null if the input string is empty or if not initialized.
      */
-    public static ArrayList<Classroom> getClassroomLike(String inputStr) {
+    public ArrayList<Classroom> getClassroomLike(String inputStr) {
         if (inputStr.isEmpty() || !isInitialized) {
             return null;
         }

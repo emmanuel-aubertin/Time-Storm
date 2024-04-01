@@ -44,18 +44,19 @@ public class Classroom {
      * @throws RuntimeException If an IOException occurs during the API request.
      */
     public ArrayList<Event> getClassroomEdt(LoginProvider user){
-        System.out.println("https://edt-api.univ-avignon.fr/api/salles/" + this.code);
+
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://127.0.0.1:5000/event/get/events_salle/" + this.code)
+                    .url("http://127.0.0.1:5000/event/get/classroom/" + this.code)
                     .get()
                     .addHeader("Authorization", "Bearer " + HelloApplication.user.getToken())
                     .build();
 
             Response response = client.newCall(request).execute();
-
-            JSONObject resJSON = new JSONObject(response.body().string());
+            String body = response.body().string();
+            System.out.println(body);
+            JSONObject resJSON = new JSONObject(body);
             JSONArray resultsArray = resJSON.getJSONArray("results");
             ArrayList<Event> output = new ArrayList<Event>();
             for (int i = 0; i < resultsArray.length(); i++) {
