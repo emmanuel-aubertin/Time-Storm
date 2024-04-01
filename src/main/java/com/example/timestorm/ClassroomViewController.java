@@ -1,42 +1,31 @@
 package com.example.timestorm;
+
 import com.example.timestorm.edtutils.Classroom;
 import com.example.timestorm.edtutils.ClassroomCollection;
 import com.example.timestorm.edtutils.Event;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 
 
 
@@ -132,7 +121,8 @@ public class ClassroomViewController{
         }
 
         // Perform the search after ensuring data is initialized
-        ArrayList<Classroom> searchResult = ClassroomCollection.getClassroomLike(searchString);
+        ClassroomCollection instance = ClassroomCollection.getInstance();
+        ArrayList<Classroom> searchResult = instance.getClassroomLike(searchString);
         if (searchResult != null) {
             for (Classroom classroom : searchResult) {
                 System.out.println(classroom); // Print the search result in the terminal

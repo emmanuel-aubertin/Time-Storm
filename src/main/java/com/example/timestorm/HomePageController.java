@@ -1,18 +1,42 @@
 package com.example.timestorm;
 
+import com.example.timestorm.edtutils.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.util.Callback;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HomePageController {
 
+    @FXML
+    public ToggleButton btnEnseignant;
+    @FXML
+    public VBox parentContainer;
+    @FXML
+    public StackPane calendarContainer;
     @FXML
     private ToggleGroup viewToggleGroup;
     @FXML
@@ -34,6 +58,13 @@ public class HomePageController {
     @FXML
     private Button btnDark;
 
+
+    @FXML
+    private TextField inputField;
+
+    private List<Event> events = new ArrayList<>();
+
+    private AutoCompletionBinding<String> autoCompletionBinding;
     @FXML
     public void initialize() {
         viewToggleGroup = new ToggleGroup();
@@ -47,6 +78,7 @@ public class HomePageController {
         btnHome.setToggleGroup(edtToggleGroup);
         btnSalle.setToggleGroup(edtToggleGroup);
         btnFormation.setToggleGroup(edtToggleGroup);
+        btnEnseignant.setToggleGroup(edtToggleGroup);
 
 
         dayBtn.setSelected(true);
@@ -55,47 +87,23 @@ public class HomePageController {
 
     @FXML
     public void onFormationButtonClick() throws IOException {
-       FXMLLoader loader = new FXMLLoader(getClass().getResource("formation-view.fxml"));
-       Parent root = loader.load();
-   
-       Scene scene = new Scene(root);
-       Stage stage = (Stage) btnFormation.getScene().getWindow();
-       stage.setScene(scene);
-       stage.show();
+        inputField.setVisible(true);
    }
 
    @FXML
    public void onSalleButtonClick() throws IOException {
-       FXMLLoader loader = new FXMLLoader(getClass().getResource("classroom-view.fxml"));
-       Parent root = loader.load();
-   
-       Scene scene = new Scene(root);
-       Stage stage = (Stage) btnSalle.getScene().getWindow(); // Replaced btnFormation with btnSalle
-       stage.setScene(scene);
-       stage.show();
+       inputField.setVisible(true);
    }
    
 
     @FXML
     public void onPersonnelButtonClick() throws IOException {
-     FXMLLoader loader = new FXMLLoader(getClass().getResource("personnel-view.fxml"));
-     Parent root = loader.load();
- 
-     Scene scene = new Scene(root);
-     Stage stage = (Stage) btnPersonnel.getScene().getWindow();
-     stage.setScene(scene);
-     stage.show();
+        inputField.setVisible(false);
  }
 
     @FXML
     public void onHomeButtonClick() throws IOException {
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("home-page.fxml"));
-    Parent root = loader.load();
-
-    Scene scene = new Scene(root);
-    Stage stage = (Stage) btnHome.getScene().getWindow();
-    stage.setScene(scene);
-    stage.show();
+        inputField.setVisible(false);
     }
     @FXML
     public void onDarkButtonClick() {
@@ -119,5 +127,86 @@ public class HomePageController {
             scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
         }
     }
+
+    @FXML
+    private void handleInput(KeyEvent event) {
+        String currentText = inputField.getText();
+        AtomicReference<String> selectedButtonText = new AtomicReference<>("");
+        ToggleButton selectedToggleButton = (ToggleButton) edtToggleGroup.getSelectedToggle();
+        if (selectedToggleButton != null) {
+            selectedButtonText.set(selectedToggleButton.getId());
+        }
+        Collection<String> suggestions = new ArrayList<>();
+
+        if (Objects.equals(selectedButtonText, "btnEnseignant")) {
+            System.out.println(selectedButtonText.get());
+            TeacherCollection instance = TeacherCollection.getInstance();
+            ArrayList<Teacher> teacherSuggestions = instance.getTeacherLike(currentText);
+            for (Teacher t : teacherSuggestions) {
+                System.out.println(t.getName());
+                suggestions.add(t.getName());
+            }
+        } else if (Objects.equals(selectedButtonText, "btnSalle")) {
+            System.out.println(selectedButtonText.get());
+            ClassroomCollection instance = ClassroomCollection.getInstance();
+            ArrayList<Classroom> teacherSuggestions = instance.getClassroomLike(currentText);
+            for (Classroom t : teacherSuggestions) {
+                System.out.println(t.getName());
+                suggestions.add(t.getName());
+            }
+        }
+
+
+
+
+        // Dispose of the old autocompletion binding if it exists
+        if (autoCompletionBinding != null) {
+            autoCompletionBinding.dispose();
+        }
+
+
+        Callback<AutoCompletionBinding.ISuggestionRequest, Collection<String>> suggestionProvider =
+                request -> suggestions.stream()
+                        .filter(suggestion -> suggestion.toLowerCase().contains(request.getUserText().toLowerCase()))
+                        .toList();
+
+        autoCompletionBinding = TextFields.bindAutoCompletion(inputField, suggestionProvider);
+
+        autoCompletionBinding.setOnAutoCompleted(autoCompleteEvent -> {
+            String selectedItem = autoCompleteEvent.getCompletion();
+            System.out.println(selectedButtonText.get());
+            if (Objects.equals(selectedButtonText, "btnEnseignant")) {
+                TeacherCollection instance = TeacherCollection.getInstance();
+                ArrayList<Teacher> teacherSuggestions = instance.getTeacherLike(currentText);
+
+                if(Objects.equals(teacherSuggestions.get(0).getName(), selectedItem)){
+                    events = teacherSuggestions.get(0).getTeacherEvents(HelloApplication.user);
+                }
+            } else if (Objects.equals(selectedButtonText, "btnSalle")) {
+                ClassroomCollection instance = ClassroomCollection.getInstance();
+                ArrayList<Classroom> teacherSuggestions = instance.getClassroomLike(currentText);
+
+                if(Objects.equals(teacherSuggestions.get(0).getName(), selectedItem)){
+                    events = teacherSuggestions.get(0).getClassroomEdt(HelloApplication.user);
+                }
+            }
+        });
+    }
+
+
+
+    private List<LocalTime> generateTimeSlots() {
+        List<LocalTime> timeSlots = new ArrayList<>();
+        LocalTime startTime = LocalTime.of(8, 0);
+        LocalTime endTime = LocalTime.of(20, 0);
+
+        while (startTime.isBefore(endTime)) {
+            timeSlots.add(startTime);
+            startTime = startTime.plusMinutes(30);
+        }
+
+        return timeSlots;
+    }
+
 
 }

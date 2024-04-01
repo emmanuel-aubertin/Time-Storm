@@ -70,7 +70,7 @@ public class Event {
         if (title.contains("Salle : ")) {
             String[] classroomSplit = title.split("Salle : ");
             if (classroomSplit.length > 1 && ClassroomCollection.isIsInitialized()) {
-                classroom = ClassroomCollection.getClassroomLike(classroomSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
+                classroom = ClassroomCollection.getInstance().getClassroomLike(classroomSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
             } else {
                 classroom = null;
             }
