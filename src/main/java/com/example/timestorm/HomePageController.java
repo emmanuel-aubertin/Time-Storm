@@ -16,29 +16,38 @@ public class HomePageController {
     @FXML
     private ToggleGroup viewToggleGroup;
     @FXML
+    private ToggleGroup edtToggleGroup;
+    @FXML
     public ToggleButton dayBtn;
     @FXML
     public ToggleButton weekBtn;
     @FXML
     public ToggleButton monthBtn;
     @FXML
-    private Button btnFormation;
+    private ToggleButton btnFormation;
     @FXML
-    private Button btnSalle;
+    private ToggleButton btnSalle;
     @FXML
-    private Button btnPersonnel;
+    private ToggleButton btnPersonnel;
     @FXML
-    private Button btnHome;
+    private ToggleButton btnHome;
     @FXML
     private Button btnDark;
 
     @FXML
     public void initialize() {
         viewToggleGroup = new ToggleGroup();
+        edtToggleGroup = new ToggleGroup();
 
         dayBtn.setToggleGroup(viewToggleGroup);
         weekBtn.setToggleGroup(viewToggleGroup);
         monthBtn.setToggleGroup(viewToggleGroup);
+
+        btnPersonnel.setToggleGroup(edtToggleGroup);
+        btnHome.setToggleGroup(edtToggleGroup);
+        btnSalle.setToggleGroup(edtToggleGroup);
+        btnFormation.setToggleGroup(edtToggleGroup);
+
 
         dayBtn.setSelected(true);
     }

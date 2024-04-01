@@ -30,7 +30,7 @@
 
 .button{
     -fx-background-color: #E6E4D8ff;
-    -fx-text-fill: #67652Aff;
+    -fx-text-fill: #383616;
     -fx-padding: 10;
     -fx-font-size: 14px;
 }
@@ -39,5 +39,5 @@
     -fx-font-size: 14px;
     -fx-padding: 10;
     -fx-background-color: #E6E4D8ff;
-    -fx-text-fill: #67652Aff;
+    -fx-text-fill: #383616;
 }

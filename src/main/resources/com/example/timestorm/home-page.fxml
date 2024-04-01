@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ToggleButton?>
@@ -9,28 +13,52 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<AnchorPane fx:id="myAnchorPane" styleClass="myAnchorPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.timestorm.HomePageController">
+<AnchorPane fx:id="myAnchorPane" prefHeight="720.0" prefWidth="1280.0" styleClass="myAnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.timestorm.HomePageController">
     <children>
-        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" >
-           <center>
-              <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-           </center>
-           <top>
-            <HBox spacing="10" BorderPane.alignment="CENTER">
-                <children>
-                    <Button fx:id="btnDark" text="Dark" onAction="#onDarkButtonClick"/>
-                    <Button fx:id="btnHome" text="Home" onAction="#onHomeButtonClick" />
-                    <Button fx:id="btnFormation" text="Formation" onAction="#onFormationButtonClick"/>
-                    <Button fx:id="btnSalle" text="Salle" onAction="#onSalleButtonClick"/>
-                    <Button fx:id="btnPersonnel" text="Personnel" onAction="#onPersonnelButtonClick" />
-                    <Region HBox.hgrow="ALWAYS" />
-                    <DatePicker />
-                    <ToggleButton text="Jour" fx:id="dayBtn" toggleGroup="$viewToggleGroup" selected="true" />
-                    <ToggleButton text="Semaine" fx:id="weekBtn" toggleGroup="$viewToggleGroup" />
-                    <ToggleButton text="Mois" fx:id="monthBtn" toggleGroup="$viewToggleGroup" />
+        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"  AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <bottom>
+                <HBox alignment="CENTER" spacing="10" BorderPane.alignment="CENTER">
+                    <children>
+                        <ToggleButton fx:id="dayBtn" opacity="0.9" selected="true" styleClass="button" text="Jour">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="viewToggleGroup" />
+                            </toggleGroup>
+                        </ToggleButton>
+                        <ToggleButton fx:id="weekBtn" opacity="0.9" styleClass="button" text="Semaine" toggleGroup="$viewToggleGroup" />
+                        <ToggleButton fx:id="monthBtn" opacity="0.9" styleClass="button" text="Mois" toggleGroup="$viewToggleGroup" />
                     </children>
-            </HBox>
-        </top>
+                    <BorderPane.margin>
+                        <Insets bottom="8.0" />
+                    </BorderPane.margin>
+                </HBox>
+            </bottom>
+            <top>
+                <HBox alignment="TOP_CENTER" spacing="10" BorderPane.alignment="TOP_CENTER">
+                    <children>
+                        <ToggleButton fx:id="btnHome" opacity="0.9" contentDisplay="CENTER" onAction="#onHomeButtonClick" selected="true" styleClass="button" text="Home">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="edtToggleGroup" />
+                            </toggleGroup>
+                        </ToggleButton>
+                        <ToggleButton fx:id="btnFormation" onAction="#onFormationButtonClick" opacity="0.9" styleClass="button" text="Formation" toggleGroup="$edtToggleGroup" />
+                        <ToggleButton fx:id="btnSalle" onAction="#onSalleButtonClick" opacity="0.9" styleClass="button" text="Salle" toggleGroup="$edtToggleGroup" />
+                        <ToggleButton fx:id="btnPersonnel" onAction="#onPersonnelButtonClick" opacity="0.9" styleClass="button" text="Personnel" toggleGroup="$edtToggleGroup" />
+                        <DatePicker />
+                    </children>
+                    <BorderPane.margin>
+                        <Insets top="8.0" />
+                    </BorderPane.margin>
+                    <opaqueInsets>
+                        <Insets left="8.0" right="8.0" />
+                    </opaqueInsets>
+                </HBox>
+            </top>
         </BorderPane>
+        <Button fx:id="btnDark" alignment="TOP_LEFT" opacity="0.9" nodeOrientation="LEFT_TO_RIGHT" onAction="#onDarkButtonClick" text="Dark" textAlignment="CENTER" AnchorPane.leftAnchor="8.0" AnchorPane.bottomAnchor="8.0">
+            <opaqueInsets>
+                <Insets left="8.0" top="8.0" />
+            </opaqueInsets>
+        </Button>
     </children>
 </AnchorPane>
+

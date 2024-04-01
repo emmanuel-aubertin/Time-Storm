@@ -11,7 +11,7 @@ import java.io.IOException;
 public class HelloApplication extends Application {
 
     public static LoginProvider user = new LoginProvider();
-    public static boolean darkMode = false;
+    public static boolean darkMode = true;
 
     @Override
     public void start(Stage stage) throws IOException {
