@@ -44,7 +44,7 @@
                         <ToggleButton fx:id="btnFormation" onAction="#onFormationButtonClick" opacity="0.9" styleClass="button" text="Formation" toggleGroup="$edtToggleGroup" />
                         <ToggleButton fx:id="btnSalle" onAction="#onFormationButtonClick" opacity="0.9" styleClass="button" text="Salle" toggleGroup="$edtToggleGroup" />
                         <ToggleButton fx:id="btnPersonnel" onAction="#onPersonnelButtonClick" opacity="0.9" styleClass="button" text="Personnel" toggleGroup="$edtToggleGroup" />
-                        <DatePicker />
+                        <DatePicker fx:id="datePicker"/>
                     </children>
                     <BorderPane.margin>
                         <Insets top="8.0" />
