@@ -118,6 +118,7 @@ public class HomePageController {
     @FXML
     public void onClickWeek() {
         updateCalendar("week");
+
     }
 
 
@@ -150,6 +151,7 @@ public class HomePageController {
     public void onHomeButtonClick() throws IOException {
         inputField.setVisible(false);
     }
+    
     @FXML
     public void onDarkButtonClick() {
         HelloApplication.darkMode = !HelloApplication.darkMode;
@@ -163,14 +165,22 @@ public class HomePageController {
             btnDark.setText("Light");
             // Apply dark mode stylesheet
             Scene scene = btnFormation.getScene();
-            scene.getStylesheets().clear();
-            scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+
+            if (scene != null) { // add a null check
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("/css/dark.css").toExternalForm());
+            }
+
         } else {
             btnDark.setText("Dark");
             // Apply light mode stylesheet
             Scene scene = btnFormation.getScene();
-            scene.getStylesheets().clear();
-            scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+
+            if (scene != null) { // add a null check
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("/css/light.css").toExternalForm());
+            }
+
         }
     }
 
