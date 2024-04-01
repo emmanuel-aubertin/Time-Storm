@@ -10,14 +10,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Represents a promotion (i.e. a group of students) at Avignon University.
- * Provides methods to retrieve information about the promotion and their schedule.
+ * Represents a classroom at Avignon University.
+ * Provides methods to retrieve information about the classroom and its schedule.
+ * This class interacts with Avignon University's API to fetch data.
  *
- * @author Your Name
+ * @author Emmanuel Aubertin (from athomisos.com)
  */
 public class Promotion {
     private final String name;
@@ -25,53 +24,27 @@ public class Promotion {
     private final String searchString;
 
     /**
-     * Constructs a Promotion object with the specified parameters.
+     * Constructs a Classroom object with the specified parameters.
      *
-     * @param name         The name of the promotion.
-     * @param code         The unique code associated with the promotion.
-     * @param searchString A map of search strings associated with the promotion (used for matching).
+     * @param name         The name of the classroom.
+     * @param code         The unique code associated with the classroom.
+     * @param searchString The search string associated with the classroom (used for matching).
      */
     public Promotion(String name, String code, String searchString) {
         this.name = name;
         this.code = code;
-        this.searchString = searchString;
+        this.searchString = searchString.toUpperCase();
     }
 
     /**
-     * Gets the name of the promotion.
-     *
-     * @return The name of the promotion.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Gets the unique code associated with the promotion.
-     *
-     * @return The code of the promotion.
-     */
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     * Gets the search strings associated with the promotion.
-     *
-     * @return The search strings of the promotion.
-     */
-    public String getsearchString() {
-        return searchString;
-    }
-
-    /**
-     * Retrieves the schedule of the promotion from the Avignon University's API using the provided LoginProvider.
+     * Retrieves the schedule of the classroom from Avignon University's API using the provided LoginProvider.
      *
      * @param user The LoginProvider used to authenticate the API request.
-     * @return An ArrayList<Event> representing the schedule of the promotion.
+     * @return An ArrayList<Event> representing the schedule of the classroom.
      * @throws RuntimeException If an IOException occurs during the API request.
      */
-    public ArrayList<Event> getPromotionEvents(LoginProvider user) {
+    public ArrayList<Event> getPromotionEdt(LoginProvider user){
+
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -81,19 +54,16 @@ public class Promotion {
                     .build();
 
             Response response = client.newCall(request).execute();
-
-            JSONObject resJSON = new JSONObject(response.body().string());
+            String body = response.body().string();
+            System.out.println(body);
+            JSONObject resJSON = new JSONObject(body);
             JSONArray resultsArray = resJSON.getJSONArray("results");
             ArrayList<Event> output = new ArrayList<Event>();
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject resultObj = resultsArray.getJSONObject(i);
-
-                Event event = new Event(resultObj.optString("code"), resultObj.optString("start"),
+                output.add(new Event(resultObj.optString("code"), resultObj.optString("start"),
                         resultObj.optString("end"), resultObj.optString("title"),
-                        resultObj.optString("memo"),
-                        user);
-
-                output.add(event);
+                        resultObj.optString("favorite"), user));
             }
             return output;
         } catch (IOException e) {
@@ -102,17 +72,43 @@ public class Promotion {
     }
 
     /**
-     * Returns a string representation of the Promotion object.
+     * Returns a string representation of the Classroom object.
      *
-     * @return A string representation of the Promotion object.
+     * @return A string representation of the Classroom object.
      */
     @Override
     public String toString() {
-        return "Promotion{" +
+        return "Classroom{" +
                 "name='" + name + '\'' +
                 ", code='" + code + '\'' +
-                ", searchString=" + searchString +
+                ", searchString='" + searchString + '\'' +
                 '}';
     }
-}
 
+    /**
+     * Gets the name of the classroom.
+     *
+     * @return The name of the classroom.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the unique code associated with the classroom.
+     *
+     * @return The code of the classroom.
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * Gets the search string associated with the classroom.
+     *
+     * @return The search string of the classroom.
+     */
+    public String getSearchString() {
+        return searchString;
+    }
+}

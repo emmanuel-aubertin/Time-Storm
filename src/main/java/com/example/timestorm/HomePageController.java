@@ -209,6 +209,13 @@ public class HomePageController {
             for (Classroom t : teacherSuggestions) {
                 suggestions.add(t.getName());
             }
+        }else if (Objects.equals(selectedButtonText.get(), "btnFormation")) {
+            System.out.println(selectedButtonText.get());
+            PromotionCollection instance = PromotionCollection.getInstance();
+            ArrayList<Promotion> teacherSuggestions = instance.getPromotionLike(currentText);
+            for (Promotion t : teacherSuggestions) {
+                suggestions.add(t.getName());
+            }
         }
 
 
@@ -267,8 +274,27 @@ public class HomePageController {
                 calendarContainer.getChildren().clear();
                 calendarContainer.getChildren().add(dayCalendar);
                 System.out.println("GridPane added");
+                }else if (Objects.equals(selectedButtonText.get(), "btnFormation")) {
+                PromotionCollection instance =  PromotionCollection.getInstance();
+                ArrayList< Promotion> teacherSuggestions = instance.getPromotionLike(currentText);
+                System.out.println(teacherSuggestions.get(0).getCode());
+                events = teacherSuggestions.get(0).getPromotionEdt(HelloApplication.user);
+                ArrayList<Event> filteredEvents = new ArrayList<>();
+
+                filteredEvents = filterEventsByDay(events, datePicker.getValue());
+                for (Event e: filteredEvents
+                ) {
+                    System.out.println(e.toString());
                 }
-        });
+                System.out.println("filteredEvents");
+                GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
+                System.out.println(dayCalendar.toString());
+                calendarContainer.getChildren().clear();
+                calendarContainer.getChildren().add(dayCalendar);
+                System.out.println("GridPane added");
+            }
+        }
+        );
     }
 
 
