@@ -11,10 +11,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class LoginPage {
+    @FXML
+    public AnchorPane myAnchorPane;
     @FXML
     private TextField usernameField; // Bind to the TextField in FXML
 
@@ -57,13 +60,15 @@ public class LoginPage {
             
                         // Get the HomePageController instance
                         HomePageController homePageController = loader.getController();
-            
-                        // Pass any necessary data to the HomePageController, if needed
-            
-                        // Set the new scene with the home page root
+
                         Stage primaryStage = (Stage) usernameField.getScene().getWindow();
                         Scene homeScene = new Scene(root);
                         primaryStage.setScene(homeScene);
+                        if (HelloApplication.darkMode) {
+                            homeScene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+                        } else {
+                            homeScene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+                        }
                         primaryStage.show();
                     } catch (Exception e) {
                         e.printStackTrace();

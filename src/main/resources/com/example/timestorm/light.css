@@ -1,12 +1,43 @@
 /* light.css */
+/* CSS HEX FOR LIGHT THEME */
+.alabaster {
+    color: #E6E4D8ff;
+}
+
+.sage {
+    color: #ADA67Dff;
+}
+
+.air-force-blue {
+    color: #6695A8ff;
+}
+
+.slate-gray {
+    color: #607F89ff
+}
+
+.dark-moss-green {
+    color: #67652Aff;
+}
+
 
 .root {
-    -fx-background-color: #f0f0f0; /* Light gray background */
-    -fx-text-fill: #000000; /* Black text */
+    -fx-background-image: url('light_city.png');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
 }
 
-.button {
-    -fx-background-color: #ffffff; /* White button background */
-    -fx-text-fill: #000000; /* Black button text */
+.button{
+    -fx-background-color: #E6E4D8ff;
+    -fx-text-fill: #67652Aff;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
 }
 
+.text-field, .password-field {
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-background-color: #E6E4D8ff;
+    -fx-text-fill: #67652Aff;
+}

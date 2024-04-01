@@ -1,11 +1,43 @@
 /* dark.css */
 
+/* CSS HEX FOR DARK THEME */
+.charcoal {
+    color: #3C5766ff;
+}
+
+.gunmetal {
+    color: #1D3340ff;
+}
+
+.paynes-gray {
+    color: #43687Fff;
+}
+
+.air-force-blue {
+    color: #598195ff;
+}
+
+.prussian-blue {
+    color: #0C2538ff;
+}
+
 .root {
-    -fx-background-color: #121212; /* Dark gray background */
-    -fx-text-fill: #ffffff; /* White text */
+    -fx-background-image: url('dark_forest.png');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
 }
 
 .button {
-    -fx-background-color: #383838; /* Dark button background */
-    -fx-text-fill: #ffffff; /* White button text */
+    -fx-background-color: #0C2538ff;
+    -fx-text-fill: #E6E4D8ff;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+}
+
+.text-field, .password-field {
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-background-color: #0C2538ff;
+    -fx-text-fill: #E6E4D8ff;
 }

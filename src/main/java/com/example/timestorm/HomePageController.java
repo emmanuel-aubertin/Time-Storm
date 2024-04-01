@@ -12,8 +12,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HomePageController {
-    
-    private static boolean darkMode = false;
+
     @FXML
     private ToggleGroup viewToggleGroup;
     @FXML
@@ -43,6 +42,7 @@ public class HomePageController {
 
         dayBtn.setSelected(true);
     }
+
 
     @FXML
     public void onFormationButtonClick() throws IOException {
@@ -90,8 +90,8 @@ public class HomePageController {
     }
     @FXML
     public void onDarkButtonClick() {
-        darkMode = !darkMode;
-        setMode(darkMode);
+        HelloApplication.darkMode = !HelloApplication.darkMode;
+        setMode(HelloApplication.darkMode);
     }
 
 
@@ -101,13 +101,13 @@ public class HomePageController {
             // Apply dark mode stylesheet
             Scene scene = btnFormation.getScene();
             scene.getStylesheets().clear();
-            scene.getStylesheets().add(getClass().getResource("/css/dark.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
         } else {
             btnDark.setText("Dark");
             // Apply light mode stylesheet
             Scene scene = btnFormation.getScene();
             scene.getStylesheets().clear();
-            scene.getStylesheets().add(getClass().getResource("/css/light.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
         }
     }
 
