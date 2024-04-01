@@ -129,6 +129,9 @@ public class LoginPage {
     }
 
 
+
+}
+
     @FXML
     public void onDarkButtonClick() {
         HelloApplication.darkMode = !HelloApplication.darkMode;
