@@ -38,6 +38,16 @@ public class Teacher {
         SearchString = searchString.toUpperCase();
     }
 
+    public String getMail() {
+        String[] parts = this.Name.split(" ");
+        if (parts.length >= 2) {
+            return (parts[1] + "." + parts[0] + "@univ-avignon.fr").toLowerCase();
+        } else {
+            return (Name + "@univ-avignon.fr").toLowerCase();
+        }
+    }
+
+
     /**
      * Gets the name of the teacher.
      *

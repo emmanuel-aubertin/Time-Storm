@@ -3,12 +3,11 @@ package com.example.timestorm;
 import com.example.timestorm.edtutils.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
@@ -344,22 +343,38 @@ public class HomePageController {
         eventRectangle.getStyleClass().add("rect");
         eventRectangle.setOpacity(0.7);
 
-        // Bind the rectangle's width to the parent container's width with adjustments
         eventRectangle.prefWidthProperty().bind(parentContainer.widthProperty().subtract(92).divide(dayNumber));
 
-        Label eventLabel = new Label(String.format("Matière : %s\nEnseignant : %s\nType : %s\nSalle : %s\nType : %s",
-                event.getTitle(), event.getTeacher().getName(),
-                event.getType(), event.getClassroom().getName(),
-                event.getType()));
-        eventLabel.setFont(new Font(12));
-        eventLabel.setTextAlignment(TextAlignment.CENTER);
-        eventLabel.setWrapText(true);
 
-        StackPane eventStackPane = new StackPane(eventRectangle, eventLabel);
-        Tooltip tooltip = new Tooltip(eventLabel.getText());
+        Hyperlink teacherLink = new Hyperlink(event.getTeacher().getName());
+        teacherLink.setOnAction(e -> {
+            try {
+                java.awt.Desktop.getDesktop().mail(new java.net.URI("mailto:" + event.getTeacher().getMail()));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+        Label titleLabel = new Label("Matière : " + event.getTitle());
+        titleLabel.setAlignment(Pos.CENTER);
+        Label typeLabel = new Label("Type : " + event.getType());
+        typeLabel.setAlignment(Pos.CENTER);
+        Label roomLabel = new Label("Salle : " + event.getClassroom().getName());
+        roomLabel.setAlignment(Pos.CENTER);
+
+
+        VBox labelContainer = new VBox(titleLabel, teacherLink, typeLabel, roomLabel);
+        labelContainer.setAlignment(Pos.CENTER);
+        labelContainer.setSpacing(5);
+
+        StackPane eventStackPane = new StackPane(eventRectangle, labelContainer);
+        Tooltip tooltip = new Tooltip(String.format("Matière : %s\nEnseignant : %s\nType : %s\nSalle : %s\nType : %s",
+                event.getTitle(), event.getTeacher().getName(), event.getType(), event.getClassroom().getName(), event.getType()));
         Tooltip.install(eventStackPane, tooltip);
         eventStackPane.minWidth(0);
         eventStackPane.prefWidthProperty().bind(parentContainer.widthProperty().subtract(86 + 16));
+
         return eventStackPane;
     }
 
