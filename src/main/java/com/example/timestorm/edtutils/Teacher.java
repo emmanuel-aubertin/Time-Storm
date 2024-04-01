@@ -85,7 +85,7 @@ public class Teacher {
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://127.0.0.1:5000/event/get/teacher/" + this.Code)
+                    .url("http://127.0.0.1:5000/event/get/teacher/" + this.UapvHR)
                     .get()
                     .addHeader("Authorization", "Bearer " + HelloApplication.user.getToken())
                     .build();

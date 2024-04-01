@@ -16,8 +16,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PersonalEvents {
-    private List<Event> persoEvents = new ArrayList<>();
+    private ArrayList<Event> persoEvents = new ArrayList<>();
 
+    public ArrayList<Event> getEvents() {
+        return persoEvents;
+    }
     public PersonalEvents(LoginProvider user) {
         try {
             OkHttpClient client = new OkHttpClient();

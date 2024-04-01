@@ -1,12 +1,70 @@
 /* light.css */
+/* CSS HEX FOR LIGHT THEME */
+.alabaster {
+    color: #E6E4D8ff;
+}
+
+.sage {
+    color: #ADA67Dff;
+}
+
+.air-force-blue {
+    color: #6695A8ff;
+}
+
+.slate-gray {
+    color: #607F89ff
+}
+
+.dark-moss-green {
+    color: #67652Aff;
+}
+
 
 .root {
-    -fx-background-color: #f0f0f0; /* Light gray background */
-    -fx-text-fill: #000000; /* Black text */
+    -fx-background-image: url('light_city.png');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
 }
 
-.button {
-    -fx-background-color: #ffffff; /* White button background */
-    -fx-text-fill: #000000; /* Black button text */
+.button{
+    -fx-background-color: #E6E4D8ff;
+    -fx-text-fill: #383616;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
 }
 
+.text-field, .password-field {
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-background-color: #E6E4D8ff;
+    -fx-text-fill: #383616;
+}
+
+.label {
+    -fx-text-fill: #383616;
+}
+
+.button:selected {
+    -fx-background-color: #67652Aff;
+}
+
+
+.rect {
+    -fx-background-color: #E6E4D8ff;
+    -fx-background-radius: 10;
+    -fx-border-color: #ADA67Dff;
+    -fx-border-radius: 10;
+    -fx-padding: 10;
+}
+
+.white-background-opacity {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-border-radius: 3;
+}
+
+.rect .text-label {
+    -fx-text-fill: #383616;
+    -fx-font-size: 14px;
+}
