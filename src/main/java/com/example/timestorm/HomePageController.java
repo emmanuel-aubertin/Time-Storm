@@ -1,17 +1,27 @@
 package com.example.timestorm;
 
-import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class HomePageController {
     
     private static boolean darkMode = false;
-
+    @FXML
+    private ToggleGroup viewToggleGroup;
+    @FXML
+    public ToggleButton dayBtn;
+    @FXML
+    public ToggleButton weekBtn;
+    @FXML
+    public ToggleButton monthBtn;
     @FXML
     private Button btnFormation;
     @FXML
@@ -25,7 +35,13 @@ public class HomePageController {
 
     @FXML
     public void initialize() {
-        setMode(darkMode);
+        viewToggleGroup = new ToggleGroup();
+
+        dayBtn.setToggleGroup(viewToggleGroup);
+        weekBtn.setToggleGroup(viewToggleGroup);
+        monthBtn.setToggleGroup(viewToggleGroup);
+
+        dayBtn.setSelected(true);
     }
 
     @FXML
@@ -94,4 +110,5 @@ public class HomePageController {
             scene.getStylesheets().add(getClass().getResource("/css/light.css").toExternalForm());
         }
     }
+
 }

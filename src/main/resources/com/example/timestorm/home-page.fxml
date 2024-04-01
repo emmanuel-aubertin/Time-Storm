@@ -15,16 +15,16 @@
    <top>
     <HBox spacing="10" BorderPane.alignment="CENTER">
         <children>
-            <Button fx:id="btnDark" text="Dark" onAction="onDarkButtonClick"/>
+            <Button fx:id="btnDark" text="Dark" onAction="#onDarkButtonClick"/>
             <Button fx:id="btnHome" text="Home" onAction="#onHomeButtonClick" />
             <Button fx:id="btnFormation" text="Formation" onAction="#onFormationButtonClick"/>
             <Button fx:id="btnSalle" text="Salle" onAction="#onSalleButtonClick"/>
             <Button fx:id="btnPersonnel" text="Personnel" onAction="#onPersonnelButtonClick" />
             <Region HBox.hgrow="ALWAYS" />
             <DatePicker />
-                <ToggleButton text="Jour" toggleGroup="$viewToggleGroup" selected="true" />
-                <ToggleButton text="Semaine" toggleGroup="$viewToggleGroup" />
-                <ToggleButton text="Mois" toggleGroup="$viewToggleGroup" />
+                <ToggleButton text="Jour" fx:id="dayBtn" toggleGroup="$viewToggleGroup" selected="true" />
+                <ToggleButton text="Semaine" fx:id="weekBtn" toggleGroup="$viewToggleGroup" />
+                <ToggleButton text="Mois" fx:id="monthBtn" toggleGroup="$viewToggleGroup" />
             </children>
     </HBox>
 </top>
