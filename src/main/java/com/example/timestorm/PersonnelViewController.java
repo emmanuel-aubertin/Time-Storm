@@ -1,6 +1,7 @@
 package com.example.timestorm;
 
 import java.io.IOException;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,9 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class HomePageController {
+public class PersonnelViewController {
     
-    private static boolean darkMode = false;
 
     @FXML
     private Button btnFormation;
@@ -21,12 +21,7 @@ public class HomePageController {
     @FXML
     private Button btnHome;
     @FXML
-    private Button btnDark;
-
-    @FXML
-    public void initialize() {
-        //setMode(darkMode);
-    }
+    private Button btnAjout;
 
     @FXML
     public void onFormationButtonClick() throws IOException {
@@ -72,31 +67,15 @@ public class HomePageController {
     stage.setScene(scene);
     stage.show();
     }
-    
+
     @FXML
-    public void onDarkButtonClick() {
-        darkMode = !darkMode;
-        setMode(darkMode);
-    }
+    public void onAjoutButtonClick() throws IOException {
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("newevent-view.fxml"));
+    Parent root = loader.load();
 
-
-    private void setMode(boolean darkMode) {
-        if (darkMode) {
-            btnDark.setText("Light");
-            // Apply dark mode stylesheet
-            Scene scene = btnFormation.getScene();
-            if (scene != null) { // add a null check
-                scene.getStylesheets().clear();
-                scene.getStylesheets().add(getClass().getResource("/css/dark.css").toExternalForm());
-            }
-        } else {
-            btnDark.setText("Dark");
-            // Apply light mode stylesheet
-            Scene scene = btnFormation.getScene();
-            if (scene != null) { // add a null check
-                scene.getStylesheets().clear();
-                scene.getStylesheets().add(getClass().getResource("/css/light.css").toExternalForm());
-            }
-        }
+    Scene scene = new Scene(root);
+    Stage stage = (Stage) btnHome.getScene().getWindow();
+    stage.setScene(scene);
+    stage.show();
     }
 }

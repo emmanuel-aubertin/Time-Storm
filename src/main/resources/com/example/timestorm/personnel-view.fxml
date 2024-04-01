@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.TextField?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.timestorm.PersonnelViewController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <top>
+        <VBox spacing="10" BorderPane.alignment="CENTER">
+            <children>
+                <HBox spacing="10">
+                    <children>
+                        <Button fx:id="btnDark" text="Dark"/>
+                        <Button fx:id="btnHome" text="Home" onAction="#onHomeButtonClick"/>
+                        <Button fx:id="btnFormation" text="Formation" onAction="#onFormationButtonClick"/>
+                        <Button fx:id="btnSalle" text="Salle" onAction="#onSalleButtonClick"/>
+                        <Button fx:id="btnPersonnel" text="Personnel" onAction="#onPersonnelButtonClick" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <DatePicker fx:id="datePicker" />
+                    </children>
+                </HBox>
+                <HBox spacing="10">
+                    <children>
+                        <Button fx:id="btnAjout" text="Ajouter Evenement" onAction="#onAjoutButtonClick" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <VBox fx:id="parentContainer" alignment="TOP_CENTER" spacing="10.0">
+            <children>
+                <StackPane fx:id="calendarContainer" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

@@ -128,6 +128,10 @@
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
+                            <compilerArgs>
+                                <arg>--add-exports</arg>
+                                <arg>javafx.base/com.sun.javafx.event=org.controlsfx.controls</arg>
+                            </compilerArgs>
                         </configuration>
                     </execution>
                 </executions>
