@@ -10,6 +10,7 @@
 
 <AnchorPane fx:id="myAnchorPane"  xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.timestorm.LoginPage">
     <children>
+        <Button fx:id="btnDark" text="Dark" onAction="#onDarkButtonClick"/>
         <BorderPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="0">
             <center>
                 <VBox  fx:id="formContainer" alignment="CENTER" spacing="10.0">

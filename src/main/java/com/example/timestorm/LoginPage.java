@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -18,6 +19,8 @@ import javafx.stage.Stage;
 public class LoginPage {
     @FXML
     public AnchorPane myAnchorPane;
+    @FXML
+    public Button btnDark;
     @FXML
     private TextField usernameField; // Bind to the TextField in FXML
 
@@ -125,5 +128,28 @@ public class LoginPage {
         }
     }
 
+
+    @FXML
+    public void onDarkButtonClick() {
+        HelloApplication.darkMode = !HelloApplication.darkMode;
+        setMode(HelloApplication.darkMode);
+    }
+
+
+    private void setMode(boolean darkMode) {
+        if (darkMode) {
+            btnDark.setText("Light");
+            // Apply dark mode stylesheet
+            Scene scene = btnDark.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+        } else {
+            btnDark.setText("Dark");
+            // Apply light mode stylesheet
+            Scene scene = btnDark.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+        }
+    }
 
 }
