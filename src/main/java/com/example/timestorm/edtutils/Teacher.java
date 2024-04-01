@@ -1,5 +1,6 @@
 package com.example.timestorm.edtutils;
 
+import com.example.timestorm.HelloApplication;
 import com.example.timestorm.LoginProvider;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -80,15 +81,13 @@ public class Teacher {
      * @return An ArrayList<Event> representing the schedule of the teacher.
      * @throws RuntimeException If an IOException occurs during the API request.
      */
-    public ArrayList<Event> getTeacherEdt(LoginProvider user) {
+    public ArrayList<Event> getTeacherEvents(LoginProvider user) {
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("https://edt-api.univ-avignon.fr/api/events_enseignant/" + this.getUapvHR())
-                    .method("GET", null)
-                    .addHeader("token", user.getToken())
-                    .addHeader("Referer", "https://edt.univ-avignon.fr")
-                    .addHeader("Origin", "https://edt.univ-avignon.fr/")
+                    .url("http://127.0.0.1:5000/event/get/teacher/" + this.UapvHR)
+                    .get()
+                    .addHeader("Authorization", "Bearer " + HelloApplication.user.getToken())
                     .build();
 
             Response response = client.newCall(request).execute();
@@ -98,17 +97,20 @@ public class Teacher {
             ArrayList<Event> output = new ArrayList<Event>();
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject resultObj = resultsArray.getJSONObject(i);
-                System.out.println(resultObj);
 
-                output.add(new Event(resultObj.optString("code"), resultObj.optString("start"),
+                Event event = new Event(resultObj.optString("code"), resultObj.optString("start"),
                         resultObj.optString("end"), resultObj.optString("title"),
-                        resultObj.optString("favorite"), user));
+                        resultObj.optString("memo"),
+                        user);
+
+                output.add(event);
             }
             return output;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     /**
      * Returns a string representation of the Teacher object.

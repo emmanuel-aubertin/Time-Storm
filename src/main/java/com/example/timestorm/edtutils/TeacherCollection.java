@@ -54,7 +54,6 @@ public class TeacherCollection {
 
                 Response response = client.newCall(request).execute();
                 String responseData = response.body().string();
-                System.out.println(responseData);
                 JSONObject teacherJSON = new JSONObject(responseData);
                 JSONArray resultsArray = teacherJSON.getJSONArray("results");
 

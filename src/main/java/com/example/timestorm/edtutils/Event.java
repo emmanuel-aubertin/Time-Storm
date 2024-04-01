@@ -19,6 +19,7 @@ public class Event {
     private String end;
     private String type;
     private String memo;
+    private String title;
     private String favori;
     private Teacher teacher;
     private Classroom classroom;
@@ -43,6 +44,12 @@ public class Event {
         this.start = start;
         this.end = end;
 
+        if (title.contains("Matière : ")) {
+            String[] typeSplit = title.split("Matière : ");
+            this.title = typeSplit.length > 1 ? typeSplit[1].split("\n")[0] : null;
+        } else {
+            this.type = null;
+        }
         if (title.contains("Type : ")) {
             String[] typeSplit = title.split("Type : ");
             this.type = typeSplit.length > 1 ? typeSplit[1].split("\n")[0] : null;
@@ -70,7 +77,7 @@ public class Event {
         if (title.contains("Salle : ")) {
             String[] classroomSplit = title.split("Salle : ");
             if (classroomSplit.length > 1 && ClassroomCollection.isIsInitialized()) {
-                classroom = ClassroomCollection.getClassroomLike(classroomSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
+                classroom = ClassroomCollection.getInstance().getClassroomLike(classroomSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
             } else {
                 classroom = null;
             }
@@ -141,6 +148,9 @@ public class Event {
      * @return The teacher of the event.
      */
     public Teacher getTeacher() {
+        if(teacher == null){
+            return new Teacher("Inconnu", "Inconnu", "Inconnu", "Inconnu");
+        }
         return teacher;
     }
 
@@ -150,9 +160,15 @@ public class Event {
      * @return The classroom of the event.
      */
     public Classroom getClassroom() {
+        if(classroom == null){
+            return new Classroom("Inconnu", "Inconnu", "Inconnu");
+        }
         return classroom;
     }
 
+    public String getTitle(){
+        return title;
+    }
     /**
      * Returns a string representation of the Event object.
      *

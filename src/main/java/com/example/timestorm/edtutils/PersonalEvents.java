@@ -1,5 +1,6 @@
 package com.example.timestorm.edtutils;
 
+import com.example.timestorm.HelloApplication;
 import com.example.timestorm.LoginProvider;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,17 +16,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PersonalEvents {
-    private List<Event> persoEvents = new ArrayList<>();
+    private ArrayList<Event> persoEvents = new ArrayList<>();
 
+    public ArrayList<Event> getEvents() {
+        return persoEvents;
+    }
     public PersonalEvents(LoginProvider user) {
         try {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("https://edt-api.univ-avignon.fr/api/events_perso?autre=false")
-                    .method("GET", null)
-                    .addHeader("token", user.getToken())
-                    .addHeader("Referer", "https://edt.univ-avignon.fr")
-                    .addHeader("Origin", "https://edt.univ-avignon.fr/")
+                    .url("http://127.0.0.1:5000/event/get/personal")
+                    .get()
+                    .addHeader("Authorization", "Bearer " + HelloApplication.user.getToken())
                     .build();
 
             Response response = client.newCall(request).execute();

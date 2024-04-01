@@ -7,16 +7,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 public class LoginPage {
+    @FXML
+    public AnchorPane myAnchorPane;
+    @FXML
+    public Button btnDark;
     @FXML
     private TextField usernameField; // Bind to the TextField in FXML
 
@@ -26,7 +30,6 @@ public class LoginPage {
     @FXML
     private VBox formContainer; // Assuming you have a VBox container for your form elements
 
-    
 
     @FXML
     private void handleLogin() {
@@ -60,13 +63,15 @@ public class LoginPage {
             
                         // Get the HomePageController instance
                         HomePageController homePageController = loader.getController();
-            
-                        // Pass any necessary data to the HomePageController, if needed
-            
-                        // Set the new scene with the home page root
+
                         Stage primaryStage = (Stage) usernameField.getScene().getWindow();
                         Scene homeScene = new Scene(root);
                         primaryStage.setScene(homeScene);
+                        if (HelloApplication.darkMode) {
+                            homeScene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+                        } else {
+                            homeScene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+                        }
                         primaryStage.show();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -95,11 +100,25 @@ public class LoginPage {
 
     @FXML
     public void initialize() {
-        // Ensure that the usernameField has been injected correctly
+
         if (usernameField != null) {
-            // Add a listener to the scene property to ensure we have a scene
             usernameField.sceneProperty().addListener((observable, oldScene, newScene) -> adjustFormWidth(newScene));
+
+            usernameField.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    handleLogin();
+                }
+            });
         }
+
+        if (passwordField != null) {
+            passwordField.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    handleLogin();
+                }
+            });
+        }
+
     }
 
     private void adjustFormWidth(Scene scene) {
@@ -108,4 +127,29 @@ public class LoginPage {
             formContainer.prefWidthProperty().bind(scene.widthProperty().multiply(0.5));
         }
     }
+
+
+    @FXML
+    public void onDarkButtonClick() {
+        HelloApplication.darkMode = !HelloApplication.darkMode;
+        setMode(HelloApplication.darkMode);
+    }
+
+
+    private void setMode(boolean darkMode) {
+        if (darkMode) {
+            btnDark.setText("Light");
+            // Apply dark mode stylesheet
+            Scene scene = btnDark.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+        } else {
+            btnDark.setText("Dark");
+            // Apply light mode stylesheet
+            Scene scene = btnDark.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+        }
+    }
+
 }
