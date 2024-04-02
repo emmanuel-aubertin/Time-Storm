@@ -23,6 +23,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 
 public class NewEventViewController {
@@ -80,6 +81,14 @@ public class NewEventViewController {
 
     @FXML
     void onCreateEventButtonClick(ActionEvent event) throws IOException {
+        if(HelloApplication.user.isStudentDOSI() && !Objects.equals(teacherCodeField.getText(), "")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to create event.");
+            alert.setContentText("Vous n'êtes pas un enseignant, vous ne pouvez pas reserver un créneau avec un prof ou une salle !");
+            alert.showAndWait();
+            return;
+        }
         String title = titleField.getText();
         LocalDate date = datePicker.getValue();
         String startTime = startTimeComboBox.getValue(); // format : "08:30"
