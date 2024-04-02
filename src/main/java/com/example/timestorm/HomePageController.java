@@ -293,7 +293,7 @@ public class HomePageController {
     private ArrayList<Event> filterEventsByWeek(ArrayList<Event> events, LocalDate date) {
         // Calculate the start and end of the week (Monday to Friday)
         LocalDate startOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        LocalDate endOfWeek = date.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
+        LocalDate endOfWeek = date.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
         ArrayList<Event> filteredEvents = new ArrayList<>();
 
@@ -366,11 +366,14 @@ public class HomePageController {
         titleLabel.setAlignment(Pos.CENTER);
         Label typeLabel = new Label("Type : " + event.getType());
         typeLabel.setAlignment(Pos.CENTER);
-        Label roomLabel = new Label("Salle : " + event.getClassroom().getName());
+        Label roomLabel = new Label("Lieu : " + event.getClassroom().getName());
         roomLabel.setAlignment(Pos.CENTER);
-
-
-        VBox labelContainer = new VBox(titleLabel, teacherLink, typeLabel, roomLabel);
+        VBox labelContainer;
+        if(!Objects.equals(event.getTeacher().getName(), "Inconnu")) {
+             labelContainer = new VBox(titleLabel, teacherLink, typeLabel, roomLabel);
+        } else {
+            labelContainer = new VBox(titleLabel, typeLabel, roomLabel);
+        }
         labelContainer.setAlignment(Pos.CENTER);
         labelContainer.setSpacing(5);
 
@@ -474,7 +477,7 @@ public class HomePageController {
             case SUNDAY:
                 return 7;
             default:
-                return -1; // Default case, though it should never be reached
+                return -1;
         }
     }
 

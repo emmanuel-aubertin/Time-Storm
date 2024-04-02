@@ -6,10 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -22,13 +19,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 
 
 public class NewEventViewController {
-
+    @FXML
     public Button btnDark;
+    @FXML
+    public DatePicker datePicker;
     @FXML
     private TextField titleField;
 
@@ -80,17 +81,31 @@ public class NewEventViewController {
     @FXML
     void onCreateEventButtonClick(ActionEvent event) throws IOException {
         String title = titleField.getText();
-        String startTime = startTimeComboBox.getValue(); // Retrieve start time from combo box
-        String endTime = endTimeComboBox.getValue(); // Retrieve end time from combo box
+        LocalDate date = datePicker.getValue();
+        String startTime = startTimeComboBox.getValue(); // format : "08:30"
+        String endTime = endTimeComboBox.getValue(); // format : "08:30"
+
+        ZoneId zoneId = ZoneId.of("UTC");
+
+        LocalDateTime startDateTime = LocalDateTime.of(date, LocalTime.parse(startTime));
+        ZonedDateTime startZonedDateTime = ZonedDateTime.of(startDateTime, zoneId).minusHours(2);
+
+        LocalDateTime endDateTime = LocalDateTime.of(date, LocalTime.parse(endTime));
+        ZonedDateTime endZonedDateTime = ZonedDateTime.of(endDateTime, zoneId).minusHours(2);
+
+        // Format ZonedDateTime to the desired string format
+        String formattedStartTime = startZonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        String formattedEndTime = endZonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
         String memo = memoField.getText();
         String type = typeField.getText();
         String teacherCode = teacherCodeField.getText();
         String classroomCode = classroomCodeField.getText();
         String promoCode = promoCodeField.getText();
-    
-        // Create the request body
-        String requestBody = "{\"title\": \"" + title + "\", \"start\": \"" + startTime + "\", \"end\": \"" + endTime + "\", \"memo\": \"" + memo + "\", \"type\": \"" + type + "\", \"teacher_code\": \"" + teacherCode + "\", \"classroom_code\": \"" + classroomCode + "\", \"promo_code\": \"" + promoCode + "\"}";
-    
+
+        // Modify requestBody to use formattedStartTime and formattedEndTime
+        String requestBody = "{\"title\": \"" + title + "\", \"start\": \"" + formattedStartTime + "\", \"end\": \"" + formattedEndTime + "\", \"memo\": \"" + memo + "\", \"type\": \"" + type + "\", \"teacher_code\": \"" + teacherCode + "\", \"classroom_code\": \"" + classroomCode + "\", \"promo_code\": \"" + promoCode + "\"}";
+        System.out.println(requestBody);
         // Set up the connection
         URL url = new URL("http://127.0.0.1:5000/event/create");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();

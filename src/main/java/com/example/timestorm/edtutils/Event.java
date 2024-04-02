@@ -1,8 +1,8 @@
 package com.example.timestorm.edtutils;
 
-import java.time.ZonedDateTime;
-
 import com.example.timestorm.LoginProvider;
+
+import java.time.ZonedDateTime;
 
 /**
  * Represents an event in the schedule at Avignon University.
@@ -80,6 +80,9 @@ public class Event {
             String[] classroomSplit = title.split("Salle : ");
             if (classroomSplit.length > 1 && ClassroomCollection.isIsInitialized()) {
                 classroom = ClassroomCollection.getInstance().getClassroomLike(classroomSplit[1].split("\n")[0]).stream().findFirst().orElse(null);
+                if(classroom == null) {
+                    classroom = new Classroom(classroomSplit[1].split("\n")[0],"", classroomSplit[1].split("\n")[0]);
+                }
             } else {
                 classroom = null;
             }
