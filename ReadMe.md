@@ -263,7 +263,7 @@ If you prefer a darker theme.
 <p align="center">
     <img
         alt="Darkmode Week"
-        src="ReadMeImages\Personnel-Seamaine-Dark.PNG"
+        src="ReadMeImages\Personnel-Semaine-Dark.PNG"
         title="Darkmode Week"
     />
 </p>
