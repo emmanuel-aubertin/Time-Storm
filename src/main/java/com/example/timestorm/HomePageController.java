@@ -2,13 +2,16 @@ package com.example.timestorm;
 
 import com.example.timestorm.edtutils.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
@@ -25,6 +28,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class HomePageController {
+    @FXML
+    public Button btnNewEvent;
     private boolean isOk = true;
     @FXML
     public ToggleButton btnEnseignant;
@@ -52,13 +57,13 @@ public class HomePageController {
     @FXML
     private Button btnDark;
 
-
     @FXML
     private TextField inputField;
 
     private ArrayList<Event> events = new ArrayList<>();
-    private int dayNumber = 1;
+    private int dayNumber = 7;
     private AutoCompletionBinding<String> autoCompletionBinding;
+
     @FXML
     public void initialize() {
         viewToggleGroup = new ToggleGroup();
@@ -72,7 +77,6 @@ public class HomePageController {
         btnFormation.setToggleGroup(edtToggleGroup);
         btnEnseignant.setToggleGroup(edtToggleGroup);
 
-
         weekBtn.setSelected(true);
         datePicker.setValue(LocalDate.now());
         PersonalEvents personalEvents = new PersonalEvents(HelloApplication.user);
@@ -82,16 +86,15 @@ public class HomePageController {
             onChangeDate(newValue);
         });
 
-
         Platform.runLater(() -> {
             updateCalendar("week");
         });
     }
 
-    private void updateCalendar(String type){
+    private void updateCalendar(String type) {
         ArrayList<Event> filteredEvents = new ArrayList<>();
         calendarContainer.getChildren().clear();
-        if(Objects.equals(type, "week")) {
+        if (Objects.equals(type, "week")) {
             dayNumber = 7;
             filteredEvents = filterEventsByWeek(events, datePicker.getValue());
         } else if (Objects.equals(type, "day")) {
@@ -103,7 +106,7 @@ public class HomePageController {
     }
 
     private void onChangeDate(LocalDate newDate) {
-        if(dayNumber == 7) {
+        if (dayNumber == 7) {
             updateCalendar("week");
         } else if (dayNumber == 1) {
             updateCalendar("day");
@@ -118,20 +121,18 @@ public class HomePageController {
     @FXML
     public void onClickWeek() {
         updateCalendar("week");
+
     }
-
-
 
     @FXML
     public void onFormationButtonClick() throws IOException {
         inputField.setVisible(true);
-   }
+    }
 
-   @FXML
-   public void onSalleButtonClick() throws IOException {
-       inputField.setVisible(true);
-   }
-   
+    @FXML
+    public void onSalleButtonClick() throws IOException {
+        inputField.setVisible(true);
+    }
 
     @FXML
     public void onPersonnelButtonClick() throws IOException {
@@ -139,7 +140,7 @@ public class HomePageController {
         datePicker.setValue(LocalDate.now());
         PersonalEvents personalEvents = new PersonalEvents(HelloApplication.user);
         events = personalEvents.getEvents();
-        if(dayNumber == 7) {
+        if (dayNumber == 7) {
             updateCalendar("week");
         } else if (dayNumber == 1) {
             updateCalendar("day");
@@ -150,27 +151,33 @@ public class HomePageController {
     public void onHomeButtonClick() throws IOException {
         inputField.setVisible(false);
     }
+
     @FXML
     public void onDarkButtonClick() {
-        HelloApplication.darkMode = !HelloApplication.darkMode;
-        setMode(HelloApplication.darkMode);
+        setMode(HelloApplication.toogleDarkModeValue());
     }
-
-
 
     private void setMode(boolean darkMode) {
         if (darkMode) {
             btnDark.setText("Light");
             // Apply dark mode stylesheet
             Scene scene = btnFormation.getScene();
-            scene.getStylesheets().clear();
-            scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+
+            if (scene != null) { // add a null check
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+            }
+
         } else {
             btnDark.setText("Dark");
             // Apply light mode stylesheet
             Scene scene = btnFormation.getScene();
-            scene.getStylesheets().clear();
-            scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+
+            if (scene != null) { // add a null check
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+            }
+
         }
     }
 
@@ -199,26 +206,30 @@ public class HomePageController {
             for (Classroom t : teacherSuggestions) {
                 suggestions.add(t.getName());
             }
+        } else if (Objects.equals(selectedButtonText.get(), "btnFormation")) {
+            System.out.println(selectedButtonText.get());
+            PromotionCollection instance = PromotionCollection.getInstance();
+            ArrayList<Promotion> teacherSuggestions = instance.getPromotionLike(currentText);
+            for (Promotion t : teacherSuggestions) {
+                suggestions.add(t.getName());
+            }
         }
-
-
-
 
         // Dispose of the old autocompletion binding if it exists
         if (autoCompletionBinding != null) {
             autoCompletionBinding.dispose();
         }
 
-
-        Callback<AutoCompletionBinding.ISuggestionRequest, Collection<String>> suggestionProvider =
-                request -> suggestions.stream()
-                        .filter(suggestion -> suggestion.toLowerCase().contains(request.getUserText().toLowerCase()))
-                        .toList();
+        Callback<AutoCompletionBinding.ISuggestionRequest, Collection<String>> suggestionProvider = request -> suggestions
+                .stream()
+                .filter(suggestion -> suggestion.toLowerCase().contains(request.getUserText().toLowerCase()))
+                .toList();
 
         autoCompletionBinding = TextFields.bindAutoCompletion(inputField, suggestionProvider);
 
         autoCompletionBinding.setOnAutoCompleted(autoCompleteEvent -> {
             String selectedItem = autoCompleteEvent.getCompletion();
+            autoCompletionBinding.dispose();
             System.out.println("SELECTED : " + selectedItem);
             System.out.println(selectedButtonText.get());
             if (Objects.equals(selectedButtonText.get(), "btnEnseignant")) {
@@ -226,42 +237,43 @@ public class HomePageController {
                 ArrayList<Teacher> teacherSuggestions = instance.getTeacherLike(currentText);
 
                 events = teacherSuggestions.get(0).getTeacherEvents(HelloApplication.user);
-                ArrayList<Event> filteredEvents = new ArrayList<>();
 
-                filteredEvents = filterEventsByDay(events, datePicker.getValue());
-                for (Event e: filteredEvents
-                ) {
-                    System.out.println(e.toString());
+
+                if (dayNumber == 7) {
+                    events = filterEventsByWeek(events, datePicker.getValue());
+                    updateCalendar("week");
+                } else if (dayNumber == 1) {
+                    events = filterEventsByDay(events, datePicker.getValue());
+                    updateCalendar("day");
                 }
-                System.out.println("filteredEvents");
-                GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
-                System.out.println(dayCalendar.toString());
-                calendarContainer.getChildren().clear();
-                calendarContainer.getChildren().add(dayCalendar);
-                System.out.println("GridPane added");
             } else if (Objects.equals(selectedButtonText.get(), "btnSalle")) {
                 ClassroomCollection instance = ClassroomCollection.getInstance();
                 ArrayList<Classroom> teacherSuggestions = instance.getClassroomLike(currentText);
                 System.out.println(teacherSuggestions.get(0).getCode());
                 events = teacherSuggestions.get(0).getClassroomEdt(HelloApplication.user);
-                ArrayList<Event> filteredEvents = new ArrayList<>();
-
-                filteredEvents = filterEventsByDay(events, datePicker.getValue());
-                for (Event e: filteredEvents
-                     ) {
-                    System.out.println(e.toString());
+                if (dayNumber == 7) {
+                    events = filterEventsByWeek(events, datePicker.getValue());
+                    updateCalendar("week");
+                } else if (dayNumber == 1) {
+                    events = filterEventsByDay(events, datePicker.getValue());
+                    updateCalendar("day");
                 }
-                System.out.println("filteredEvents");
-                GridPane dayCalendar = createDayCalendar(datePicker.getValue(), filteredEvents);
-                System.out.println(dayCalendar.toString());
-                calendarContainer.getChildren().clear();
-                calendarContainer.getChildren().add(dayCalendar);
                 System.out.println("GridPane added");
+            } else if (Objects.equals(selectedButtonText.get(), "btnFormation")) {
+                PromotionCollection instance = PromotionCollection.getInstance();
+                ArrayList<Promotion> teacherSuggestions = instance.getPromotionLike(currentText);
+                System.out.println(teacherSuggestions.get(0).getCode());
+                events = teacherSuggestions.get(0).getPromotionEdt(HelloApplication.user);
+                if (dayNumber == 7) {
+                    events = filterEventsByWeek(events, datePicker.getValue());
+                    updateCalendar("week");
+                } else if (dayNumber == 1) {
+                    events = filterEventsByDay(events, datePicker.getValue());
+                    updateCalendar("day");
                 }
+            }
         });
     }
-
-
 
     private ArrayList<Event> filterEventsByDay(ArrayList<Event> events, LocalDate date) {
         ArrayList<Event> filteredEvents = new ArrayList<>();
@@ -335,24 +347,40 @@ public class HomePageController {
         eventRectangle.setPrefHeight(25 * rowSpan);
         eventRectangle.setMinWidth(0);
         eventRectangle.getStyleClass().add("rect");
-        eventRectangle.setOpacity(0.7);
 
-        // Bind the rectangle's width to the parent container's width with adjustments
+
         eventRectangle.prefWidthProperty().bind(parentContainer.widthProperty().subtract(92).divide(dayNumber));
 
-        Label eventLabel = new Label(String.format("Matière : %s\nEnseignant : %s\nType : %s\nSalle : %s\nType : %s",
-                event.getTitle(), event.getTeacher().getName(),
-                event.getType(), event.getClassroom().getName(),
-                event.getType()));
-        eventLabel.setFont(new Font(12));
-        eventLabel.setTextAlignment(TextAlignment.CENTER);
-        eventLabel.setWrapText(true);
 
-        StackPane eventStackPane = new StackPane(eventRectangle, eventLabel);
-        Tooltip tooltip = new Tooltip(eventLabel.getText());
+        Hyperlink teacherLink = new Hyperlink(event.getTeacher().getName());
+        teacherLink.setOnAction(e -> {
+            try {
+                java.awt.Desktop.getDesktop().mail(new java.net.URI("mailto:" + event.getTeacher().getMail()));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+        Label titleLabel = new Label("Matière : " + event.getTitle());
+        titleLabel.setAlignment(Pos.CENTER);
+        Label typeLabel = new Label("Type : " + event.getType());
+        typeLabel.setAlignment(Pos.CENTER);
+        Label roomLabel = new Label("Salle : " + event.getClassroom().getName());
+        roomLabel.setAlignment(Pos.CENTER);
+
+
+        VBox labelContainer = new VBox(titleLabel, teacherLink, typeLabel, roomLabel);
+        labelContainer.setAlignment(Pos.CENTER);
+        labelContainer.setSpacing(5);
+
+        StackPane eventStackPane = new StackPane(eventRectangle, labelContainer);
+        Tooltip tooltip = new Tooltip(String.format("Matière : %s\nEnseignant : %s\nType : %s\nSalle : %s\nType : %s",
+                event.getTitle(), event.getTeacher().getName(), event.getType(), event.getClassroom().getName(), event.getType()));
         Tooltip.install(eventStackPane, tooltip);
         eventStackPane.minWidth(0);
         eventStackPane.prefWidthProperty().bind(parentContainer.widthProperty().subtract(86 + 16));
+
         return eventStackPane;
     }
 
@@ -363,6 +391,7 @@ public class HomePageController {
         calendar.prefWidthProperty().bind(parentContainer.widthProperty());
         calendar.setHgap(5);
         calendar.setVgap(5);
+        calendar.setOpacity(0.8);
 
         // Adjust maximum width to consider padding/margin
         calendar.setMaxWidth(parentContainer.getWidth() - 16);
@@ -387,25 +416,32 @@ public class HomePageController {
                 ZonedDateTime eventStart = ZonedDateTime.parse(event.getStart()).plusHours(2);
                 ZonedDateTime eventEnd = ZonedDateTime.parse(event.getEnd()).plusHours(2);
 
-                if (!eventStart.toLocalDate().isEqual(date) && dayNumber == 1) continue;
+                if (!eventStart.toLocalDate().isEqual(date) && dayNumber == 1)
+                    continue;
 
-                boolean isInTimeSlot = !eventStart.toLocalTime().isBefore(timeSlot) && eventEnd.toLocalTime().isAfter(timeSlot);
-                if (!isInTimeSlot) continue;
+                boolean isInTimeSlot = !eventStart.toLocalTime().isBefore(timeSlot)
+                        && eventEnd.toLocalTime().isAfter(timeSlot);
+                if (!isInTimeSlot)
+                    continue;
 
-                int eventStartIndex = Math.max(timeSlots.indexOf(eventStart.toLocalTime().truncatedTo(ChronoUnit.MINUTES)), 0);
-                int eventEndIndex = Math.min(timeSlots.indexOf(eventEnd.toLocalTime().truncatedTo(ChronoUnit.MINUTES)), timeSlots.size() - 1);
+                int eventStartIndex = Math
+                        .max(timeSlots.indexOf(eventStart.toLocalTime().truncatedTo(ChronoUnit.MINUTES)), 0);
+                int eventEndIndex = Math.min(timeSlots.indexOf(eventEnd.toLocalTime().truncatedTo(ChronoUnit.MINUTES)),
+                        timeSlots.size() - 1);
 
-                if (eventStartIndex == -1 || eventEndIndex == -1) continue;
+                if (eventStartIndex == -1 || eventEndIndex == -1)
+                    continue;
 
                 int rowSpan = eventEndIndex - eventStartIndex + 1;
 
                 int eventDayColumn = 1;
-                if(dayNumber == 7) {
+                if (dayNumber == 7) {
                     eventDayColumn = calculateEventDayColumn(event);
                 }
 
-                if(eventDayColumn > 0) {
-                    calendar.add(getEvent(event, rowSpan), eventDayColumn, eventStartIndex, 1, rowSpan);
+                if (eventDayColumn > 0) {
+                    StackPane eventRectangle = getEvent(event, rowSpan);
+                    calendar.add(eventRectangle, eventDayColumn, eventStartIndex, 1, rowSpan);
                 }
             }
         }
@@ -413,7 +449,6 @@ public class HomePageController {
         calendar.setMaxHeight(parentContainer.getHeight() - 50); // Adjust for bottom padding/margin
         return calendar;
     }
-
 
     public static int calculateEventDayColumn(Event event) {
         // Assuming event.getStart() returns a date time string in ISO format
@@ -443,6 +478,19 @@ public class HomePageController {
         }
     }
 
+    @FXML
+    public void onNewEventButtonClick(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("newevent-view.fxml"));
+        Parent root = loader.load();
 
-
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) btnDark.getScene().getWindow();
+        if (HelloApplication.darkMode()) {
+            scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+        } else {
+            scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 }

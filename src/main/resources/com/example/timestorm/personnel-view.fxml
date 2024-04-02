@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.TextField?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.timestorm.FormationViewController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.timestorm.PersonnelViewController">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
@@ -21,22 +21,18 @@
             <children>
                 <HBox spacing="10">
                     <children>
-                        <Button fx:id="btnDark" text="Dark" />
+                        <Button fx:id="btnDark" text="Dark"/>
                         <Button fx:id="btnHome" text="Home" onAction="#onHomeButtonClick"/>
                         <Button fx:id="btnFormation" text="Formation" onAction="#onFormationButtonClick"/>
                         <Button fx:id="btnSalle" text="Salle" onAction="#onSalleButtonClick"/>
                         <Button fx:id="btnPersonnel" text="Personnel" onAction="#onPersonnelButtonClick" />
                         <Region HBox.hgrow="ALWAYS" />
                         <DatePicker fx:id="datePicker" />
-                        <ToggleButton fx:id="jourToggleButton" text="Jour" toggleGroup="$viewToggleGroup" selected="true" />
-                        <ToggleButton fx:id="semaineToggleButton" text="Semaine" toggleGroup="$viewToggleGroup" />
-                        <ToggleButton fx:id="moisToggleButton" text="Mois" toggleGroup="$viewToggleGroup" />
                     </children>
                 </HBox>
                 <HBox spacing="10">
                     <children>
-                        <TextField fx:id="searchField" promptText="Recherchez emploi du temps d'une formation" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="searchButton" text="Search" onAction="#handleSearch" />
+                        <Button fx:id="btnAjout" text="Ajouter Evenement" onAction="#onAjoutButtonClick" />
                     </children>
                 </HBox>
             </children>
