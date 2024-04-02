@@ -1,5 +1,6 @@
 package com.example.timestorm;
 
+import com.example.timestorm.edtutils.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -22,29 +24,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ComboBox;
-
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-
-import com.example.timestorm.edtutils.Classroom;
-import com.example.timestorm.edtutils.ClassroomCollection;
-import com.example.timestorm.edtutils.Promotion;
-import com.example.timestorm.edtutils.Teacher;
-import com.example.timestorm.edtutils.TeacherCollection;
 
 
 public class NewEventViewController {
 
+    public Button btnDark;
     @FXML
     private TextField titleField;
 
-    @FXML
-    private TextField startTimeField;
-
-    @FXML
-    private TextField endTimeField;
 
     @FXML
     private TextField memoField;
@@ -72,7 +59,7 @@ public class NewEventViewController {
 
     @FXML
     private AutoCompletionBinding<String> autoCompletionBinding;
-    private Text seeChoice;
+
 
 
     public void initialize() {
@@ -120,7 +107,7 @@ public class NewEventViewController {
     
         // Check the response code
         int responseCode = con.getResponseCode();
-        if (responseCode == 200) {
+        if (responseCode == 200 || responseCode == 201) {
             // Read the response body
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -147,11 +134,17 @@ public class NewEventViewController {
             classroomCodeField.clear();
             promoCodeField.clear();
         } else {
-            // Show an error alert
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder responseBody = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                responseBody.append(inputLine);
+            }
+            in.close();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Failed to create event.");
-            alert.setContentText("Response code: " + responseCode);
+            alert.setContentText("Response code: " + responseCode +"\n"+ responseBody.toString());
             alert.showAndWait();
         }
     }
@@ -160,13 +153,11 @@ public class NewEventViewController {
     @FXML
     private void handleTeacherCodeInput(KeyEvent event) {
         String currentText = teacherCodeField.getText();
-        System.out.println("Input: " + currentText);
         TeacherCollection instance = TeacherCollection.getInstance();
         ArrayList<Teacher> teacherSuggestions = instance.getTeacherLike(currentText);
         Collection<String> suggestions = new ArrayList<>();
         for (Teacher t : teacherSuggestions) {
             suggestions.add(t.getName());
-            System.out.println(t.getName());
         }
 
         // Dispose of the old autocompletion binding if it exists
@@ -183,9 +174,39 @@ public class NewEventViewController {
 
         autoCompletionBinding.setOnAutoCompleted(autoCompleteEvent -> {
             String selectedItem = autoCompleteEvent.getCompletion();
-            seeChoice.setText(selectedItem);
+            autoCompletionBinding.dispose();
         });
     }
+
+@FXML
+private void handlePromoCodeInput(KeyEvent event) {
+    String currentText = promoCodeField.getText();
+    System.out.println("Input: " + currentText);
+    PromotionCollection instance = PromotionCollection.getInstance();
+    ArrayList<Promotion> classroomSuggestions = instance.getPromotionLike(currentText);
+    Collection<String> suggestions = new ArrayList<>();
+    for (Promotion c : classroomSuggestions) {
+        suggestions.add(c.getName());
+        System.out.println(c.getName());
+    }
+
+    if (autoCompletionBinding != null) {
+        autoCompletionBinding.dispose();
+    }
+
+
+    Callback<AutoCompletionBinding.ISuggestionRequest, Collection<String>> suggestionProvider =
+            request -> suggestions.stream()
+                    .filter(suggestion -> suggestion.toLowerCase().contains(request.getUserText().toLowerCase()))
+                    .toList();
+
+    autoCompletionBinding = TextFields.bindAutoCompletion(promoCodeField, suggestionProvider);
+
+    autoCompletionBinding.setOnAutoCompleted(autoCompleteEvent -> {
+        String selectedItem = autoCompleteEvent.getCompletion();
+        autoCompletionBinding.dispose();
+    });
+}
 
 @FXML
 private void handleClassroomCodeInput(KeyEvent event) {
@@ -196,7 +217,7 @@ private void handleClassroomCodeInput(KeyEvent event) {
     Collection<String> suggestions = new ArrayList<>();
     for (Classroom c : classroomSuggestions) {
         suggestions.add(c.getName());
-        System.out.println(c.getName());
+        
     }
 
     // Dispose of the old autocompletion binding if it exists
@@ -213,24 +234,45 @@ private void handleClassroomCodeInput(KeyEvent event) {
 
     autoCompletionBinding.setOnAutoCompleted(autoCompleteEvent -> {
         String selectedItem = autoCompleteEvent.getCompletion();
-        seeChoice.setText(selectedItem);
+        autoCompletionBinding.dispose();
     });
 }
 
 @FXML
-private void handlePromoCodeInput(KeyEvent event) {
- System.out.println("blaba");
-}
-
-@FXML
     public void onBackButtonClick() throws IOException {
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("newevent-view.fxml"));
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("home-page.fxml"));
     Parent root = loader.load();
 
     Scene scene = new Scene(root);
     Stage stage = (Stage) backButton.getScene().getWindow();
+    if (HelloApplication.darkMode()) {
+        scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+    } else {
+        scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+    }
     stage.setScene(scene);
     stage.show();
+    }
+    @FXML
+    public void onDarkButtonClick() {
+        setMode(HelloApplication.toogleDarkModeValue());
+    }
+
+
+    private void setMode(boolean darkMode) {
+        if (darkMode) {
+            btnDark.setText("Light");
+            // Apply dark mode stylesheet
+            Scene scene = btnDark.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+        } else {
+            btnDark.setText("Dark");
+            // Apply light mode stylesheet
+            Scene scene = btnDark.getScene();
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+        }
     }
 
 }

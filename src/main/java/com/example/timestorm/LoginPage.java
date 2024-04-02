@@ -1,6 +1,7 @@
 package com.example.timestorm;
 
 import com.example.timestorm.edtutils.ClassroomCollection;
+import com.example.timestorm.edtutils.PromotionCollection;
 import com.example.timestorm.edtutils.TeacherCollection;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -54,9 +55,8 @@ public class LoginPage {
                     // initialisation
                     TeacherCollection.getInstance();
                     ClassroomCollection.getInstance();
+                    PromotionCollection.getInstance();
 
-            
-                    // Load the home page FXML file
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("home-page.fxml"));
                         Parent root = loader.load();
@@ -67,7 +67,7 @@ public class LoginPage {
                         Stage primaryStage = (Stage) usernameField.getScene().getWindow();
                         Scene homeScene = new Scene(root);
                         primaryStage.setScene(homeScene);
-                        if (HelloApplication.darkMode) {
+                        if (HelloApplication.darkMode()) {
                             homeScene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
                         } else {
                             homeScene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
@@ -133,8 +133,8 @@ public class LoginPage {
 
     @FXML
     public void onDarkButtonClick() {
-        HelloApplication.darkMode = !HelloApplication.darkMode;
-        setMode(HelloApplication.darkMode);
+        HelloApplication.isDarkMode = !HelloApplication.isDarkMode;
+        setMode(HelloApplication.isDarkMode);
     }
 
 

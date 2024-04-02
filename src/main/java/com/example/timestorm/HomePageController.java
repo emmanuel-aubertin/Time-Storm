@@ -2,12 +2,16 @@ package com.example.timestorm;
 
 import com.example.timestorm.edtutils.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
@@ -24,6 +28,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class HomePageController {
+    @FXML
+    public Button btnNewEvent;
     private boolean isOk = true;
     @FXML
     public ToggleButton btnEnseignant;
@@ -148,8 +154,7 @@ public class HomePageController {
 
     @FXML
     public void onDarkButtonClick() {
-        HelloApplication.darkMode = !HelloApplication.darkMode;
-        setMode(HelloApplication.darkMode);
+        setMode(HelloApplication.toogleDarkModeValue());
     }
 
     private void setMode(boolean darkMode) {
@@ -224,6 +229,7 @@ public class HomePageController {
 
         autoCompletionBinding.setOnAutoCompleted(autoCompleteEvent -> {
             String selectedItem = autoCompleteEvent.getCompletion();
+            autoCompletionBinding.dispose();
             System.out.println("SELECTED : " + selectedItem);
             System.out.println(selectedButtonText.get());
             if (Objects.equals(selectedButtonText.get(), "btnEnseignant")) {
@@ -472,4 +478,19 @@ public class HomePageController {
         }
     }
 
+    @FXML
+    public void onNewEventButtonClick(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("newevent-view.fxml"));
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) btnDark.getScene().getWindow();
+        if (HelloApplication.darkMode()) {
+            scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+        } else {
+            scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
 }

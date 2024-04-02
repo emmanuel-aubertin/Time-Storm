@@ -71,5 +71,10 @@
                 <Insets left="8.0" top="8.0" />
             </opaqueInsets>
         </Button>
+        <Button fx:id="btnNewEvent" alignment="TOP_LEFT" nodeOrientation="LEFT_TO_RIGHT" onAction="#onNewEventButtonClick" opacity="0.9" text="Nouveau" textAlignment="CENTER" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="8.0">
+            <opaqueInsets>
+                <Insets left="8.0" top="8.0" />
+            </opaqueInsets>
+        </Button>
     </children>
 </AnchorPane>
