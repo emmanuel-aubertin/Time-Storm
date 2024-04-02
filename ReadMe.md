@@ -272,7 +272,7 @@ Adding an event to your schedule.
 <p align="left">
     <img
         alt="Ajout-Event"
-        src="ReadMeImages\Personnel-Semaine-Dark.PNG"
+        src="ReadMeImages\Ajout-Event.PNG"
         title="Ajout-Event"
     />
 </p>
