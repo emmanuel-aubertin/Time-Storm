@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -30,6 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class HomePageController {
     @FXML
     public Button btnNewEvent;
+    public AnchorPane myAnchorPane;
     private boolean isOk = true;
     @FXML
     public ToggleButton btnEnseignant;
@@ -65,31 +67,82 @@ public class HomePageController {
     private AutoCompletionBinding<String> autoCompletionBinding;
 
     @FXML
-    public void initialize() {
-        viewToggleGroup = new ToggleGroup();
-        edtToggleGroup = new ToggleGroup();
+        public void initialize() {
+            viewToggleGroup = new ToggleGroup();
+            edtToggleGroup = new ToggleGroup();
 
-        dayBtn.setToggleGroup(viewToggleGroup);
-        weekBtn.setToggleGroup(viewToggleGroup);
+            dayBtn.setToggleGroup(viewToggleGroup);
+            weekBtn.setToggleGroup(viewToggleGroup);
 
-        btnPersonnel.setToggleGroup(edtToggleGroup);
-        btnSalle.setToggleGroup(edtToggleGroup);
-        btnFormation.setToggleGroup(edtToggleGroup);
-        btnEnseignant.setToggleGroup(edtToggleGroup);
+            btnPersonnel.setToggleGroup(edtToggleGroup);
+            btnSalle.setToggleGroup(edtToggleGroup);
+            btnFormation.setToggleGroup(edtToggleGroup);
+            btnEnseignant.setToggleGroup(edtToggleGroup);
 
-        weekBtn.setSelected(true);
-        datePicker.setValue(LocalDate.now());
-        PersonalEvents personalEvents = new PersonalEvents(HelloApplication.user);
-        events = personalEvents.getEvents();
-        datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            // Call the onChangeDate method whenever the date changes
-            onChangeDate(newValue);
-        });
+            weekBtn.setSelected(true);
+            datePicker.setValue(LocalDate.now());
+            PersonalEvents personalEvents = new PersonalEvents(HelloApplication.user);
+            events = personalEvents.getEvents();
+            datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+                // Call the onChangeDate method whenever the date changes
+                onChangeDate(newValue);
+            });
 
-        Platform.runLater(() -> {
-            updateCalendar("week");
-        });
+            Platform.runLater(() -> {
+                updateCalendar("week");
+
+                myAnchorPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                    if (event.getCode() == KeyCode.RIGHT) {
+                        if(dayNumber == 1){
+                            plusDay();
+                        } else if (dayNumber == 7){
+                            plusWeek();
+                        }
+                        return;
+                    }
+                    if (event.getCode() == KeyCode.LEFT) {
+                        if(dayNumber == 1){
+                            minusDay();
+                        } else if (dayNumber == 7){
+                            minusWeek();
+                        }
+                        return;
+                    }
+                });
+                
+            });
+
+
+        }
+
+    private void plusWeek(){
+        LocalDate currentDate = datePicker.getValue();
+        LocalDate newDate = currentDate.plusDays(7);
+        datePicker.setValue(newDate);
+        updateCalendar("week");
     }
+
+    private void plusDay(){
+        LocalDate currentDate = datePicker.getValue();
+        LocalDate newDate = currentDate.plusDays(1);
+        datePicker.setValue(newDate);
+        updateCalendar("day");
+    }
+
+    private void minusWeek(){
+        LocalDate currentDate = datePicker.getValue();
+        LocalDate newDate = currentDate.minusDays(7);
+        datePicker.setValue(newDate);
+        updateCalendar("week");
+    }
+
+    private void minusDay(){
+        LocalDate currentDate = datePicker.getValue();
+        LocalDate newDate = currentDate.minusDays(1);
+        datePicker.setValue(newDate);
+        updateCalendar("day");
+    }
+
 
     private void updateCalendar(String type) {
         ArrayList<Event> filteredEvents = new ArrayList<>();
